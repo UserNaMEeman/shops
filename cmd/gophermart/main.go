@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/UserNaMEeman/shops/internal/config"
+)
 
 func main() {
-	fmt.Println("Hello, World")
+	addr, db, as := config.GetConfig()
+	fmt.Println("addr: ", addr, " db: ", db, " as: ", as)
 }

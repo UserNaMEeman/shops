@@ -1,3 +1,3 @@
-module github.com/UserNaMEeman/go-musthave-diploma-tpl
+module github.com/UserNaMEeman/shops
 
 go 1.17
