@@ -4,7 +4,7 @@ import (
 	"os"
 )
 
-func GetConfig(flagAddr, flagDbAddr, flagAsAddr *string) (string, string, string) {
+func GetConfig(flagAddr, flagDBAddr, flagAsAddr *string) (string, string, string) {
 	addr := os.Getenv("RUN_ADDRESS")
 	dbAddr := os.Getenv("DATABASE_URI")
 	asAddr := os.Getenv("ACCRUAL_SYSTEM_ADDRESS")
@@ -12,7 +12,7 @@ func GetConfig(flagAddr, flagDbAddr, flagAsAddr *string) (string, string, string
 		addr = *flagAddr
 	}
 	if dbAddr == "" {
-		dbAddr = *flagDbAddr
+		dbAddr = *flagDBAddr
 	}
 	if asAddr == "" {
 		asAddr = *flagAsAddr

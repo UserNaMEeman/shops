@@ -19,5 +19,5 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	json.Unmarshal(data, &user)
 	fmt.Println(user.Login, user.Password)
-	w.WriteHeader(http.StatusAccepted)
+	w.WriteHeader(http.StatusOK)
 }
