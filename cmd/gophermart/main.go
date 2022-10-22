@@ -25,8 +25,8 @@ func init() {
 func main() {
 	flag.Parse()
 	r := chi.NewRouter()
-	addr, _, _ := config.GetConfig(addr, dbAddr, asAddr)
-
+	addr, db, as := config.GetConfig(addr, dbAddr, asAddr)
+	fmt.Println("programm parametrs: ", addr, db, as)
 	r.Post("/api/user/register", handler.Register)
 
 	if err := http.ListenAndServe(addr, r); err != nil {
