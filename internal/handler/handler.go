@@ -18,8 +18,16 @@ func Register(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 	json.Unmarshal(data, &user)
-	fmt.Println(user.Login, user.Password)
-	w.Header().Add("Authorization", "ok")
+	fmt.Println("user login: ", user.Login, "user password: ", user.Password)
+	cookie := &http.Cookie{
+		Name:   "id",
+		Value:  "abcd",
+		MaxAge: 300,
+	}
+	http.SetCookie(w, cookie)
+	// w.WriteHeader(200)
+	// w.Write([]byte("Doc Get Successful"))
+	// w.Header().Add("Authorization", "ok")
 	// w.WriteHeader("Authorization")
 	w.WriteHeader(http.StatusOK)
 }
