@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -84,17 +85,18 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("login and password must be not empty"))
 		return
 	}
-	id, err := h.services.Authorization.CreateUser(user)
+	token, err := h.services.Authorization.GenerateToken(user)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println(err)
+		w.WriteHeader(401)
 		return
 	}
-	if id == 0 {
-		w.WriteHeader(http.StatusConflict)
-		w.Write([]byte("login already exist"))
-		return
-	}
-	w.WriteHeader(http.StatusOK)
+	// http.SetCookie(w, &http.Cookie{
+	// 	Name: "test",
+	// })
+	// http.SetCookie(w, token)
+	w.Header().Add("Cookie", token)
+	w.WriteHeader(200)
 }
 
 // func Test(w http.ResponseWriter, r *http.Request) {

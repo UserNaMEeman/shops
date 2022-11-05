@@ -16,7 +16,7 @@ func NewHandler(services *service.Service) *Handler {
 func (h *Handler) InitRoutes() *chi.Mux {
 	router := chi.NewRouter()
 	router.Post("/api/user/register", h.signUp) //registration
-	// router.Post("/api/user/login", signIn)            //authentification
+	router.Post("/api/user/login", h.signIn)    //authentification
 	// router.Post("/api/user/orders", signUp)           //загрузка пользователем номера заказа для расчёта
 	// router.Get("/api/user/orders", signUp)            //получение списка загруженных пользователем номеров заказов, статусов их обработки и информации о начислениях
 	// router.Get("/api/user/balance", signUp)           //получение текущего баланса счёта баллов лояльности пользователя

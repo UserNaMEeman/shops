@@ -7,6 +7,7 @@ import (
 
 type Authorization interface { //регистрация, аутентификация и авторизация пользователей;
 	CreateUser(app.User) (int, error)
+	GetUser(app.User) (string, error)
 }
 
 type Orders interface{} //приём номеров заказов от зарегистрированных пользователей;

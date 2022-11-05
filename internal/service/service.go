@@ -10,6 +10,7 @@ import (
 
 type Authorization interface {
 	CreateUser(user app.User) (int, error)
+	GenerateToken(user app.User) (string, error)
 }
 
 type Orders interface{} //приём номеров заказов от зарегистрированных пользователей;
