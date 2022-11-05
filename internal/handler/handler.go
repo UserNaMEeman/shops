@@ -1,33 +1,26 @@
 package handler
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-
-	"github.com/UserNaMEeman/shops/internal/info"
+	"github.com/UserNaMEeman/shops/internal/service"
+	"github.com/go-chi/chi"
 )
 
-func Register(w http.ResponseWriter, r *http.Request) {
-	user := info.NewUser()
-	data, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-	}
+type Handler struct {
+	services *service.Service
+}
 
-	defer r.Body.Close()
-	json.Unmarshal(data, &user)
-	fmt.Println("user login: ", user.Login, "user password: ", user.Password)
-	cookie := &http.Cookie{
-		Name:   "id",
-		Value:  "abcd",
-		MaxAge: 300,
-	}
-	http.SetCookie(w, cookie)
-	// w.WriteHeader(200)
-	// w.Write([]byte("Doc Get Successful"))
-	// w.Header().Add("Authorization", "ok")
-	// w.WriteHeader("Authorization")
-	w.WriteHeader(http.StatusOK)
+func NewHandler(services *service.Service) *Handler {
+	return &Handler{services: services}
+}
+
+func (h *Handler) InitRoutes() *chi.Mux {
+	router := chi.NewRouter()
+	router.Post("/api/user/register", h.signUp) //registration
+	// router.Post("/api/user/login", signIn)            //authentification
+	// router.Post("/api/user/orders", signUp)           //загрузка пользователем номера заказа для расчёта
+	// router.Get("/api/user/orders", signUp)            //получение списка загруженных пользователем номеров заказов, статусов их обработки и информации о начислениях
+	// router.Get("/api/user/balance", signUp)           //получение текущего баланса счёта баллов лояльности пользователя
+	// router.Post("/api/user/balance/withdraw", signUp) //запрос на списание баллов с накопительного счёта в счёт оплаты нового заказа
+	// router.Get("/api/user/balance/withdraw", signUp)  //получение информации о выводе средств с накопительного счёта пользователем
+	return router
 }
