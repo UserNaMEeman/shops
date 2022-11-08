@@ -91,13 +91,28 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(401)
 		return
 	}
-	// http.SetCookie(w, &http.Cookie{
-	// 	Name: "test",
-	// })
-	// http.SetCookie(w, token)
-	w.Header().Add("Cookie", token)
+	w.Header().Add("Authorization", "Bearer "+token)
 	w.WriteHeader(200)
 }
+
+// func (h *Handler) signInDep(w http.ResponseWriter, r *http.Request) {
+// 	var user app.User
+// 	data, err := ioutil.ReadAll(r.Body)
+// 	if err != nil {
+// 		http.Error(w, err.Error(), 500)
+// 		return
+// 	}
+// 	defer r.Body.Close()
+// 	json.Unmarshal(data, &user)
+// 	if user.Login == "" || user.Password == "" {
+// 		w.WriteHeader(400)
+// 		w.Write([]byte("login and password must be not empty"))
+// 		return
+// 	}
+// 	cookie := h.services.Authorization.GenerateCookie(user)
+// 	http.SetCookie(w, cookie)
+// 	w.WriteHeader(200)
+// }
 
 // func Test(w http.ResponseWriter, r *http.Request) {
 // 	user := info.NewUser()

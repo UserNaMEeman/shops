@@ -3,6 +3,7 @@ package service
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"net/http"
 
 	"github.com/UserNaMEeman/shops/app"
 	"github.com/UserNaMEeman/shops/internal/repository"
@@ -11,6 +12,7 @@ import (
 type Authorization interface {
 	CreateUser(user app.User) (int, error)
 	GenerateToken(user app.User) (string, error)
+	GenerateCookie(user app.User) *http.Cookie
 }
 
 type Orders interface{} //приём номеров заказов от зарегистрированных пользователей;

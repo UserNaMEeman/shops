@@ -33,14 +33,15 @@ func main() {
 	addr, dbURI, as := config.GetConfig(addr, dbAddr, asAddr)
 	fmt.Println("programm parametrs: ", addr, dbURI, as)
 
-	db, err := repository.NewPostgresDB(repository.Config{
-		Host:     "localhost",
-		Port:     "5432",
-		Username: "postgres",
-		Password: "password",
-		DBName:   "gophermarket",
-		SSLMode:  "disable",
-	})
+	// db, err := repository.NewPostgresDB(repository.Config{
+	// 	Host:     "localhost",
+	// 	Port:     "5432",
+	// 	Username: "postgres",
+	// 	Password: "password",
+	// 	DBName:   "gophermarket",
+	// 	SSLMode:  "disable",
+	// })
+	db, err := repository.NewPostgresDB(*dbAddr)
 	if err != nil {
 		logrus.Fatalf("failed connect to DB: %s", err.Error())
 	}

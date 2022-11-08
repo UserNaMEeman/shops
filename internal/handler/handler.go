@@ -22,5 +22,6 @@ func (h *Handler) InitRoutes() *chi.Mux {
 	// router.Get("/api/user/balance", signUp)           //получение текущего баланса счёта баллов лояльности пользователя
 	// router.Post("/api/user/balance/withdraw", signUp) //запрос на списание баллов с накопительного счёта в счёт оплаты нового заказа
 	// router.Get("/api/user/balance/withdraw", signUp)  //получение информации о выводе средств с накопительного счёта пользователем
+	router.Get("/test", h.IsLoggedIn)
 	return router
 }
