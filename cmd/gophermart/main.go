@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/http"
+	"time"
 
 	"github.com/UserNaMEeman/shops/app"
 	"github.com/UserNaMEeman/shops/internal/config"
@@ -31,17 +33,6 @@ func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 	flag.Parse()
 	addr, dbURI, as := config.GetConfig(addr, dbAddr, asAddr)
-	fmt.Println("qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-	fmt.Println("qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-	fmt.Println("qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-	fmt.Println("qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-	fmt.Println("qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-	fmt.Println("qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-	fmt.Println("qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-	fmt.Println("qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-	fmt.Println("qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-	fmt.Println("qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
-	fmt.Println("qwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww")
 	fmt.Println("programm parametrs: ", addr, dbURI, as)
 
 	// db, err := repository.NewPostgresDB(repository.Config{
@@ -60,8 +51,16 @@ func main() {
 	services := service.NewServices(repos)
 	handlers := handler.NewHandler(services)
 	srv := new(app.Server)
-	if err := srv.Run(addr, handlers.InitRoutes()); err != nil {
-		logrus.Fatal(err)
+	// if err := srv.Run(addr, handlers.InitRoutes()); err != nil {
+	// 	logrus.Fatal(err)
+	// }
+	srv.HttpServer = &http.Server{
+		Addr:         addr,
+		Handler:      handlers.InitRoutes(),
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
-	// storage.Connect()
+	if err = srv.HttpServer.ListenAndServe(); err != nil {
+		fmt.Println(err)
+	}
 }
