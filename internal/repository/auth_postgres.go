@@ -51,11 +51,11 @@ func (r *AuthPostgres) CreateUser(user app.User) (int, error) {
 }
 
 func (r *AuthPostgres) GetUser(user app.User) (string, error) {
-	var userGuid string
+	var userGUID string
 	query := fmt.Sprintf("SELECT user_guid  FROM %s WHERE login = $1 AND password_hash = $2", usersTable)
-	err := r.db.Get(&userGuid, query, user.Login, user.Password)
+	err := r.db.Get(&userGUID, query, user.Login, user.Password)
 	if err != nil {
 		return "", err
 	}
-	return userGuid, nil
+	return userGUID, nil
 }
