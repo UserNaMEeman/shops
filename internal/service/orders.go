@@ -1,6 +1,32 @@
 package service
 
-func Valid(number int) bool {
+import (
+	"errors"
+	"strconv"
+
+	"github.com/UserNaMEeman/shops/internal/repository"
+)
+
+type Order struct {
+	repo repository.Orders
+}
+
+func NewOrdersService(repo repository.Orders) *Order {
+	return &Order{repo: repo}
+}
+
+func (order *Order) UploadOrderNumber(number string) error {
+	num, err := strconv.Atoi(number)
+	if err != nil {
+		return err
+	}
+	if !valid(num) {
+		return errors.New("number is not valid")
+	}
+	return order.repo.UploadOrderNumber(number)
+}
+
+func valid(number int) bool {
 	return (number%10+checksum(number/10))%10 == 0
 }
 

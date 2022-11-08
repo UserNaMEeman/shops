@@ -3,7 +3,6 @@ package handler
 import (
 	"github.com/UserNaMEeman/shops/internal/service"
 	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
 )
 
 type Handler struct {
@@ -22,9 +21,9 @@ func (h *Handler) InitRoutes() *chi.Mux {
 	router.Post("/api/user/login", h.signIn)    //authentification
 
 	router.Route("/api/user", func(router chi.Router) {
-		router.Use(middleware.Logger)
+		// router.Use(middleware.Logger)
 		router.Use(h.userIdentity)
-		router.Post("/orders", h.test) //загрузка пользователем номера заказа для расчёта
+		router.Post("/orders", h.uploadOrder) //загрузка пользователем номера заказа для расчёта
 	})
 	// router.Post("/api/user/orders", signUp)           //загрузка пользователем номера заказа для расчёта
 	// router.Get("/api/user/orders", signUp)            //получение списка загруженных пользователем номеров заказов, статусов их обработки и информации о начислениях

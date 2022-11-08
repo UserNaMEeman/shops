@@ -4,9 +4,6 @@ import (
 	"crypto/sha1"
 	"errors"
 	"fmt"
-	"math/rand"
-	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -54,22 +51,6 @@ func (s *AuthService) GenerateToken(user app.User) (string, error) {
 		"1",
 	})
 	return token.SignedString([]byte(signingKey))
-}
-
-func (s *AuthService) GenerateCookie(user app.User) *http.Cookie {
-	cookieValue := user.Login + ":" + generateCookieHash(user.Login+strconv.Itoa(rand.Intn(100000000)))
-	expire := time.Now().AddDate(0, 0, 1)
-	return &http.Cookie{Name: "SessionID", Value: cookieValue, Expires: expire, HttpOnly: true}
-
-	// timeNow := time.Now().Format("2006-01-02 15:04:05")
-	// val := generateCookieHash(timeNow + user.Login)
-	// cookie := http.Cookie{
-	// 	Name:    "sessionID",
-	// 	Value:   val,
-	// 	Expires: time.Now().Add(12 * time.Hour),
-	// 	MaxAge:  60 * 12 * 60,
-	// }
-	// return &cookie
 }
 
 func (s *AuthService) ParseToken(accessToken string) (string, error) {

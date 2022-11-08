@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/UserNaMEeman/shops/app"
@@ -14,22 +13,6 @@ type AuthPostgres struct {
 
 func NewAuthPostgres(db *sqlx.DB) *AuthPostgres {
 	return &AuthPostgres{db: db}
-}
-
-type usererr struct {
-	message string
-	err     error
-}
-
-func (mes *usererr) Error() string {
-	return fmt.Sprintf("%s %v", mes.message, mes.err)
-}
-
-func NewUserError(err error) error {
-	return &usererr{
-		message: "user:",
-		err:     errors.New("already exist"),
-	}
 }
 
 func (r *AuthPostgres) CreateUser(user app.User) (int, error) {
@@ -59,3 +42,19 @@ func (r *AuthPostgres) GetUser(user app.User) (string, error) {
 	}
 	return userGUID, nil
 }
+
+// type usererr struct {
+// 	message string
+// 	err     error
+// }
+
+// func (mes *usererr) Error() string {
+// 	return fmt.Sprintf("%s %v", mes.message, mes.err)
+// }
+
+// func NewUserError(err error) error {
+// 	return &usererr{
+// 		message: "user:",
+// 		err:     errors.New("already exist"),
+// 	}
+// }

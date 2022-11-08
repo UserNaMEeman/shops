@@ -11,7 +11,8 @@ type Authorization interface { //регистрация, аутентифика�
 }
 
 type Orders interface {
-	GetNumber(app.User) (string, error)
+	// GetNumber(app.User) (string, error)
+	UploadOrderNumber(number string) error
 } //приём номеров заказов от зарегистрированных пользователей;
 
 type AccountingOrders interface{} //учёт и ведение списка переданных номеров заказов зарегистрированного пользователя;
@@ -34,5 +35,6 @@ type Repository struct {
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthPostgres(db),
+		Orders:        NewOrderPostgres(db),
 	}
 }

@@ -3,7 +3,6 @@ package service
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"net/http"
 
 	"github.com/UserNaMEeman/shops/app"
 	"github.com/UserNaMEeman/shops/internal/repository"
@@ -13,11 +12,10 @@ type Authorization interface {
 	CreateUser(user app.User) (int, error)
 	GenerateToken(user app.User) (string, error)
 	ParseToken(token string) (string, error)
-	GenerateCookie(user app.User) *http.Cookie
 }
 
 type Orders interface {
-	GetOrderNumber(user app.User) (string, error)
+	UploadOrderNumber(number string) error
 } //приём номеров заказов от зарегистрированных пользователей;
 
 type AccountingOrders interface{} //учёт и ведение списка переданных номеров заказов зарегистрированного пользователя;
@@ -40,6 +38,7 @@ type Service struct {
 func NewServices(repos *repository.Repository) *Service {
 	return &Service{
 		Authorization: NewAuthService(repos.Authorization),
+		Orders:        NewOrdersService(repos.Orders),
 	}
 }
 
