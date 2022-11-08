@@ -40,6 +40,7 @@ func main() {
 	// 	SSLMode:  "disable",
 	// })
 	db, err := repository.NewPostgresDB(dbURI)
+	repository.CreateTables(db)
 	if err != nil {
 		// fmt.Println(err)
 		logrus.Fatalf("failed connect to DB: %s", err.Error())

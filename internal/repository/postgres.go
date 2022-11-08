@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
@@ -33,4 +35,27 @@ func NewPostgresDB(URI string) (*sqlx.DB, error) {
 		return nil, err
 	}
 	return db, nil
+}
+
+func CreateTables(db *sqlx.DB) error {
+	query := fmt.Sprintf(`CREATE TABLE %s
+		(
+			id serial not null unique,
+			login varchar(255) not null unique,
+			user_guid varchar(255) not null unique,
+			password_hash varchar(255) not null
+		)`, "users")
+	if _, err := db.Exec(query); err != nil {
+		return err
+	}
+	query = fmt.Sprintf(`CREATE TABLE %s
+	(
+		id serial not null unique,
+		user_guid varchar(255) not null unique,
+		value varchar(255) not null
+	)`, "orders")
+	if _, err := db.Exec(query); err != nil {
+		return err
+	}
+	return nil
 }
