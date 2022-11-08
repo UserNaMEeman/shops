@@ -21,7 +21,7 @@ var (
 )
 
 func init() {
-	addr = flag.String("a", ":8080", `address to run HTTP server (default ":8080")`)
+	addr = flag.String("a", "localhost:8080", `address to run HTTP server (default ":8080")`)
 	dbAddr = flag.String("d", "", "URI to database")
 	asAddr = flag.String("r", "", "accural system address")
 }
