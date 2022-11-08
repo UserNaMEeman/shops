@@ -69,6 +69,13 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("login already exist"))
 		return
 	}
+	token, err := h.services.Authorization.GenerateToken(newUser)
+	if err != nil {
+		fmt.Println(err)
+		w.WriteHeader(401)
+		return
+	}
+	w.Header().Add("Authorization", "Bearer "+token)
 	w.WriteHeader(http.StatusOK)
 }
 func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
@@ -92,7 +99,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Add("Authorization", "Bearer "+token)
-	w.WriteHeader(200)
+	w.WriteHeader(http.StatusOK)
 }
 
 // func (h *Handler) signInDep(w http.ResponseWriter, r *http.Request) {
