@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/UserNaMEeman/shops/app"
@@ -21,7 +22,7 @@ const (
 
 type tokenClaims struct {
 	jwt.StandardClaims
-	UserID int `json:"user_guid"`
+	UserGUID string `json:"user_guid"`
 }
 
 type AuthService struct {
@@ -50,7 +51,7 @@ func (s *AuthService) GenerateToken(user app.User) (string, error) {
 			ExpiresAt: time.Now().Add(12 * time.Hour).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
-		1,
+		"1",
 	})
 	return token.SignedString([]byte(signingKey))
 }
@@ -71,21 +72,29 @@ func (s *AuthService) GenerateCookie(user app.User) *http.Cookie {
 	// return &cookie
 }
 
-func (s *AuthService) ParseToken(accessToken string) (int, error) {
-	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+func (s *AuthService) ParseToken(accessToken string) (string, error) {
+	jwtString := strings.Split(accessToken, "Bearer ")[1]
+	token, err := jwt.ParseWithClaims(jwtString, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
 		}
 		return []byte(signingKey), nil
 	})
+	// fmt.Println("Raw: ", token.Raw)
+	// fmt.Println("Method: ", token.Method)
+	// fmt.Println("Header: ", token.Header)
+	// fmt.Println("Claims: ", token.Claims)
+	// fmt.Println("Signature: ", token.Signature)
+	// fmt.Println("Valid: ", token.Valid)
 	if err != nil {
-		return 0, err
+		// fmt.Println("ERRRR: ", err)
+		return "", err
 	}
 	claims, ok := token.Claims.(*tokenClaims)
 	if !ok {
-		return 0, errors.New("token claims are not of type *tokenClaims")
+		return "", errors.New("token claims are not of type *tokenClaims")
 	}
-	return claims.UserID, nil
+	return claims.UserGUID, nil
 }
 
 func generatePasswordHash(password string) string {

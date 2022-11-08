@@ -75,20 +75,20 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(401)
 		return
 	}
-	w.Header().Add("Authorization", "Bearer "+token)
+	w.Header().Add("Authorization", token) //"Bearer "+token
 	w.WriteHeader(http.StatusOK)
 }
-func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) { // must add 401 — неверная пара логин/пароль;
 	var user app.User
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	defer r.Body.Close()
 	json.Unmarshal(data, &user)
 	if user.Login == "" || user.Password == "" {
-		w.WriteHeader(400)
+		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("login and password must be not empty"))
 		return
 	}
@@ -98,8 +98,14 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(401)
 		return
 	}
-	w.Header().Add("Authorization", "Bearer "+token)
+	w.Header().Add("Authorization", token) //"Bearer "+token
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *Handler) test(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("do test")
+	w.Write([]byte("OKs"))
+	// w.WriteHeader(http.StatusOK)
 }
 
 // func (h *Handler) signInDep(w http.ResponseWriter, r *http.Request) {

@@ -9,6 +9,6 @@ CREATE TABLE users
 CREATE TABLE orders
 (
     id serial not null unique,
-    user_guid varchar(255) not null unique,
+    user_guid varchar(255) not null,
     value varchar(255) not null
 );

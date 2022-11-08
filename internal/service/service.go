@@ -12,10 +12,13 @@ import (
 type Authorization interface {
 	CreateUser(user app.User) (int, error)
 	GenerateToken(user app.User) (string, error)
+	ParseToken(token string) (string, error)
 	GenerateCookie(user app.User) *http.Cookie
 }
 
-type Orders interface{} //приём номеров заказов от зарегистрированных пользователей;
+type Orders interface {
+	GetOrderNumber(user app.User) (string, error)
+} //приём номеров заказов от зарегистрированных пользователей;
 
 type AccountingOrders interface{} //учёт и ведение списка переданных номеров заказов зарегистрированного пользователя;
 

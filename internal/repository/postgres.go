@@ -37,7 +37,8 @@ func NewPostgresDB(URI string) (*sqlx.DB, error) {
 	return db, nil
 }
 
-func CreateTables(db *sqlx.DB) error {
+func CreateTables(db *sqlx.DB) []error {
+	var errors []error
 	query := fmt.Sprintf(`CREATE TABLE %s
 		(
 			id serial not null unique,
@@ -46,16 +47,21 @@ func CreateTables(db *sqlx.DB) error {
 			password_hash varchar(255) not null
 		)`, "users")
 	if _, err := db.Exec(query); err != nil {
-		return err
+		errors = append(errors, err)
+		// return err
 	}
 	query = fmt.Sprintf(`CREATE TABLE %s
 	(
 		id serial not null unique,
-		user_guid varchar(255) not null unique,
+		user_guid varchar(255) not null,
 		value varchar(255) not null
 	)`, "orders")
-	if _, err := db.Exec(query); err != nil {
-		return err
+	_, err := db.Exec(query)
+	if err != nil {
+		errors = append(errors, err)
+	}
+	if len(errors) > 0 {
+		return errors
 	}
 	return nil
 }
