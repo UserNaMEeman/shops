@@ -4,16 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
-	"time"
 
-	"github.com/UserNaMEeman/shops/app"
 	"github.com/UserNaMEeman/shops/internal/config"
-	"github.com/UserNaMEeman/shops/internal/handler"
-	"github.com/UserNaMEeman/shops/internal/repository"
-	"github.com/UserNaMEeman/shops/internal/service"
-
 	// "github.com/UserNaMEeman/shops/internal/storage"
-	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -30,37 +23,29 @@ func init() {
 
 //  ***postgres/praktikum?sslmode=disable
 func main() {
-	logrus.SetFormatter(new(logrus.JSONFormatter))
-	flag.Parse()
+	// logrus.SetFormatter(new(logrus.JSONFormatter))
+	// flag.Parse()
 	addr, dbURI, as := config.GetConfig(addr, dbAddr, asAddr)
 	fmt.Println("programm parametrs: ", addr, dbURI, as)
 
-	// db, err := repository.NewPostgresDB(repository.Config{
-	// 	Host:     "localhost",
-	// 	Port:     "5432",
-	// 	Username: "postgres",
-	// 	Password: "password",
-	// 	DBName:   "gophermarket",
-	// 	SSLMode:  "disable",
-	// })
-	db, err := repository.NewPostgresDB(*dbAddr)
-	if err != nil {
-		logrus.Fatalf("failed connect to DB: %s", err.Error())
-	}
-	repos := repository.NewRepository(db)
-	services := service.NewServices(repos)
-	handlers := handler.NewHandler(services)
-	srv := new(app.Server)
+	// // db, err := repository.NewPostgresDB(repository.Config{
+	// // 	Host:     "localhost",
+	// // 	Port:     "5432",
+	// // 	Username: "postgres",
+	// // 	Password: "password",
+	// // 	DBName:   "gophermarket",
+	// // 	SSLMode:  "disable",
+	// // })
+	// db, err := repository.NewPostgresDB(*dbAddr)
+	// if err != nil {
+	// 	logrus.Fatalf("failed connect to DB: %s", err.Error())
+	// }
+	// repos := repository.NewRepository(db)
+	// services := service.NewServices(repos)
+	// handlers := handler.NewHandler(services)
+	// srv := new(app.Server)
 	// if err := srv.Run(addr, handlers.InitRoutes()); err != nil {
 	// 	logrus.Fatal(err)
 	// }
-	srv.HttpServer = &http.Server{
-		Addr:         addr,
-		Handler:      handlers.InitRoutes(),
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 10 * time.Second,
-	}
-	if err = srv.HttpServer.ListenAndServe(); err != nil {
-		fmt.Println(err)
-	}
+	http.ListenAndServe(addr, nil)
 }
