@@ -6,6 +6,10 @@ import (
 	"net/http"
 
 	"github.com/UserNaMEeman/shops/internal/config"
+	"github.com/UserNaMEeman/shops/internal/handler"
+	"github.com/UserNaMEeman/shops/internal/repository"
+	"github.com/UserNaMEeman/shops/internal/service"
+	"github.com/sirupsen/logrus"
 	// "github.com/UserNaMEeman/shops/internal/storage"
 )
 
@@ -24,28 +28,33 @@ func init() {
 //  ***postgres/praktikum?sslmode=disable
 func main() {
 	// logrus.SetFormatter(new(logrus.JSONFormatter))
-	// flag.Parse()
+	flag.Parse()
 	addr, dbURI, as := config.GetConfig(addr, dbAddr, asAddr)
 	fmt.Println("programm parametrs: ", addr, dbURI, as)
-
-	// // db, err := repository.NewPostgresDB(repository.Config{
-	// // 	Host:     "localhost",
-	// // 	Port:     "5432",
-	// // 	Username: "postgres",
-	// // 	Password: "password",
-	// // 	DBName:   "gophermarket",
-	// // 	SSLMode:  "disable",
-	// // })
-	// db, err := repository.NewPostgresDB(*dbAddr)
-	// if err != nil {
-	// 	logrus.Fatalf("failed connect to DB: %s", err.Error())
-	// }
-	// repos := repository.NewRepository(db)
-	// services := service.NewServices(repos)
-	// handlers := handler.NewHandler(services)
+	// db, err := repository.NewPostgresDB(repository.Config{
+	// 	Host:     "localhost",
+	// 	Port:     "5432",
+	// 	Username: "postgres",
+	// 	Password: "password",
+	// 	DBName:   "gophermarket",
+	// 	SSLMode:  "disable",
+	// })
+	db, err := repository.NewPostgresDB(dbURI)
+	if err != nil {
+		// fmt.Println(err)
+		logrus.Fatalf("failed connect to DB: %s", err.Error())
+	}
+	repos := repository.NewRepository(db)
+	services := service.NewServices(repos)
+	handlers := handler.NewHandler(services)
 	// srv := new(app.Server)
+	if err := http.ListenAndServe(addr, handlers.InitRoutes()); err != nil {
+		logrus.Fatal(err)
+	}
 	// if err := srv.Run(addr, handlers.InitRoutes()); err != nil {
 	// 	logrus.Fatal(err)
 	// }
-	http.ListenAndServe(addr, nil)
+	// if err := app.Run(addr, handlers.InitRoutes()); err != nil {
+	// 	logrus.Fatal(err)
+	// }
 }
