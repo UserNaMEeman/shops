@@ -3,7 +3,6 @@ package handler
 import (
 	"github.com/UserNaMEeman/shops/internal/service"
 	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
 )
 
 type Handler struct {
@@ -17,7 +16,7 @@ func NewHandler(services *service.Service) *Handler {
 func (h *Handler) InitRoutes() *chi.Mux {
 	router := chi.NewRouter()
 	// router.Use(h.userIdentity)
-	router.Use(middleware.Logger)
+	// router.Use(middleware.Logger)
 	router.Post("/api/user/register", h.signUp) //registration
 	router.Post("/api/user/login", h.signIn)    //authentification
 

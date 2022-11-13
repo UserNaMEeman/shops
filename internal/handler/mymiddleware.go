@@ -9,6 +9,7 @@ import (
 // type guid string
 
 func (h *Handler) userIdentity(next http.Handler) http.Handler {
+	fmt.Println("//////////////////////userIdentity////////////////////////////////")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
@@ -20,8 +21,11 @@ func (h *Handler) userIdentity(next http.Handler) http.Handler {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
+		fmt.Println("//////////////////////Context////////////////////////////////")
 		ctx := r.Context()
+		fmt.Println("//////////////////////ctx////////////////////////////////")
 		ctx = context.WithValue(ctx, "guid", userGUID)
+		fmt.Println("//////////////////////guid////////////////////////////////")
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
