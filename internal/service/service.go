@@ -9,13 +9,15 @@ import (
 )
 
 type Authorization interface {
-	CreateUser(user app.User) (int, error)
+	CreateUser(user app.User) (string, error)
 	GenerateToken(user app.User) (string, error)
 	ParseToken(token string) (string, error)
+	// MatchGUIDTOKEN(guid, token string) error
 }
 
 type Orders interface {
-	UploadOrderNumber(number string) error
+	UploadOrderNumber(guid, number string) error
+	CheckOrder(guid, orderNumber string) (string, bool)
 } //приём номеров заказов от зарегистрированных пользователей;
 
 type AccountingOrders interface{} //учёт и ведение списка переданных номеров заказов зарегистрированного пользователя;

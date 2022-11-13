@@ -59,12 +59,12 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("login and password must be not empty"))
 		return
 	}
-	id, err := h.services.Authorization.CreateUser(newUser)
+	GUID, err := h.services.Authorization.CreateUser(newUser)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	if id == 0 {
+	if GUID == "" {
 		w.WriteHeader(http.StatusConflict)
 		w.Write([]byte("login already exist"))
 		return
@@ -95,18 +95,18 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) { // must add 4
 	token, err := h.services.Authorization.GenerateToken(user)
 	if err != nil {
 		fmt.Println(err)
-		w.WriteHeader(401)
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 	w.Header().Add("Authorization", token) //"Bearer "+token
 	w.WriteHeader(http.StatusOK)
 }
 
-func (h *Handler) test(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("do test")
-	w.Write([]byte("OKs"))
-	// w.WriteHeader(http.StatusOK)
-}
+// func (h *Handler) test(w http.ResponseWriter, r *http.Request) {
+// 	fmt.Println("do test")
+// 	w.Write([]byte("OKs"))
+// 	// w.WriteHeader(http.StatusOK)
+// }
 
 // func (h *Handler) signInDep(w http.ResponseWriter, r *http.Request) {
 // 	var user app.User

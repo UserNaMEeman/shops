@@ -15,15 +15,19 @@ func NewOrdersService(repo repository.Orders) *Order {
 	return &Order{repo: repo}
 }
 
-func (order *Order) UploadOrderNumber(number string) error {
-	num, err := strconv.Atoi(number)
+func (order *Order) UploadOrderNumber(guid, orderNumber string) error {
+	num, err := strconv.Atoi(orderNumber)
 	if err != nil {
 		return err
 	}
 	if !valid(num) {
 		return errors.New("number is not valid")
 	}
-	return order.repo.UploadOrderNumber(number)
+	return order.repo.UploadOrderNumber(guid, orderNumber)
+}
+
+func (order *Order) CheckOrder(guid, orderNumber string) (string, bool) {
+	return order.repo.CheckOrder(guid, orderNumber)
 }
 
 func valid(number int) bool {

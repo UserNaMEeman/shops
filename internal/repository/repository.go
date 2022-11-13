@@ -6,13 +6,14 @@ import (
 )
 
 type Authorization interface { //регистрация, аутентификация и авторизация пользователей;
-	CreateUser(app.User) (int, error)
+	CreateUser(app.User) (string, error)
 	GetUser(app.User) (string, error)
 }
 
 type Orders interface {
 	// GetNumber(app.User) (string, error)
-	UploadOrderNumber(number string) error
+	UploadOrderNumber(guid, orderNumber string) error
+	CheckOrder(guid, orderNumber string) (string, bool)
 } //приём номеров заказов от зарегистрированных пользователей;
 
 type AccountingOrders interface{} //учёт и ведение списка переданных номеров заказов зарегистрированного пользователя;

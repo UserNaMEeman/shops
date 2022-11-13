@@ -1,21 +1,12 @@
 package handler
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 )
 
-// func (h *Handler) userIdentity(w http.ResponseWriter, r *http.Request) {
-// 	authHeader := r.Header.Get("")
-// }
-
-// func (h *Handler) userIdentity(w http.ResponseWriter, r *http.Request) {
-// 	tokenCookie, err := r.Cookie("Customer3")
-// 	if err != nil {
-// 		log.Fatalf("Error occured while reading cookie")
-// 	}
-// 	fmt.Println(tokenCookie)
-// }
+// type guid string
 
 func (h *Handler) userIdentity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -24,12 +15,14 @@ func (h *Handler) userIdentity(next http.Handler) http.Handler {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		_, err := h.services.Authorization.ParseToken(authHeader)
+		userGUID, err := h.services.Authorization.ParseToken(authHeader)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		next.ServeHTTP(w, r)
+		ctx := r.Context()
+		ctx = context.WithValue(ctx, "guid", userGUID)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 
