@@ -30,7 +30,7 @@ func main() {
 	// logrus.SetFormatter(new(logrus.JSONFormatter))
 	flag.Parse()
 	addr, dbURI, as := config.GetConfig(addr, dbAddr, asAddr)
-	fmt.Println("programm parametrs: ", addr, dbURI, as)
+	fmt.Println("server: ", addr, "databaseURI: ", dbURI, "accural system: ", as)
 	// db, err := repository.NewPostgresDB(repository.Config{
 	// 	Host:     "localhost",
 	// 	Port:     "5432",
