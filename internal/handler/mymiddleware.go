@@ -11,7 +11,8 @@ import (
 func (h *Handler) userIdentity(next http.Handler) http.Handler {
 	fmt.Println("//////////////////////userIdentity////////////////////////////////")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		authHeader := r.Header.Get("Token")
+		authHeader := r.Header.Get("Authorization")
+		fmt.Println("authHeader: ", authHeader)
 		if authHeader == "" {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
