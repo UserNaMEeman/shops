@@ -11,17 +11,17 @@ import (
 func (h *Handler) userIdentity(next http.Handler) http.Handler {
 	fmt.Println("//////////////////////userIdentity////////////////////////////////")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		authHeader := r.Header.Get("Authorization")
+		authHeader := r.Header.Get("Token")
 		if authHeader == "" {
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
-		// userGUID, err := h.services.Authorization.ParseToken(authHeader)
-		// if err != nil {
-		// 	w.WriteHeader(http.StatusUnauthorized)
-		// 	return
-		// }
-		userGUID := "test"
+		userGUID, err := h.services.Authorization.ParseToken(authHeader)
+		if err != nil {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		// userGUID := "test"
 		fmt.Println("//////////////////////Context////////////////////////////////")
 		ctx := r.Context()
 		fmt.Println("//////////////////////ctx////////////////////////////////")
