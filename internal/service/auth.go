@@ -4,7 +4,6 @@ import (
 	"crypto/sha1"
 	"errors"
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/UserNaMEeman/shops/app"
@@ -53,7 +52,7 @@ func (s *AuthService) GenerateToken(user app.User) (string, error) {
 }
 
 func (s *AuthService) ParseToken(accessToken string) (string, error) {
-	accessToken = strings.Split(accessToken, "Bearer ")[1]
+	// accessToken = strings.Split(accessToken, "Bearer ")[1]
 	token, err := jwt.ParseWithClaims(accessToken, &tokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("invalid signing method")
