@@ -67,8 +67,8 @@ func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Content-Type", "application/json")
 	// for _, i := range orders {
 	// fmt.Println("number: ", i.Number, "	data: ", i.Data.Format(time.RFC3339))
 	// fmt.Println("data: ", i.Data.Format(time.RFC3339))
