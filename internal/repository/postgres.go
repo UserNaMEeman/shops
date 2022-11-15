@@ -54,7 +54,8 @@ func CreateTables(db *sqlx.DB) []error {
 	(
 		id serial not null unique,
 		user_guid varchar(255) not null,
-		value varchar(255) not null
+		value varchar(255) not null,
+		data timestamp not null
 	)`, "orders")
 	_, err := db.Exec(query)
 	if err != nil {

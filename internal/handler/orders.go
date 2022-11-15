@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -39,4 +40,36 @@ func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// h.services.UploadOrderNumber(string(order))
+}
+
+func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	guid := fmt.Sprintf("%s", ctx.Value("guid"))
+	newOrder := h.services.Orders
+	orders, err := newOrder.GetOrders(guid)
+	if err != nil {
+		// fmt.Println(err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if len(orders) == 0 {
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+
+	data, err := json.Marshal(orders)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	_, err = w.Write(data)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	// for _, i := range orders {
+	// fmt.Println("number: ", i.Number, "	data: ", i.Data.Format(time.RFC3339))
+	// fmt.Println("data: ", i.Data.Format(time.RFC3339))
+	// }
 }

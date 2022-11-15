@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strconv"
 
+	"github.com/UserNaMEeman/shops/app"
 	"github.com/UserNaMEeman/shops/internal/repository"
 )
 
@@ -28,6 +29,10 @@ func (order *Order) UploadOrderNumber(guid, orderNumber string) error {
 
 func (order *Order) CheckOrder(guid, orderNumber string) (string, bool) {
 	return order.repo.CheckOrder(guid, orderNumber)
+}
+
+func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
+	return order.repo.GetOrders(guid)
 }
 
 func valid(number int) bool {

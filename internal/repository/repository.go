@@ -14,6 +14,7 @@ type Orders interface {
 	// GetNumber(app.User) (string, error)
 	UploadOrderNumber(guid, orderNumber string) error
 	CheckOrder(guid, orderNumber string) (string, bool)
+	GetOrders(guid string) ([]app.UserOrders, error)
 } //приём номеров заказов от зарегистрированных пользователей;
 
 type AccountingOrders interface{} //учёт и ведение списка переданных номеров заказов зарегистрированного пользователя;

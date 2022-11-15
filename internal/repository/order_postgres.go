@@ -2,7 +2,9 @@ package repository
 
 import (
 	"fmt"
+	"time"
 
+	"github.com/UserNaMEeman/shops/app"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -15,8 +17,9 @@ func NewOrderPostgres(db *sqlx.DB) *OrderPostgres {
 }
 
 func (r *OrderPostgres) UploadOrderNumber(userGUID, orderNumber string) error {
-	query := fmt.Sprintf("INSERT INTO %s (user_guid, value) values ($1, $2)", ordersTable)
-	_, err := r.db.Exec(query, userGUID, orderNumber) //.QueryRow(query, userGUID, orderNumber)
+	timeNow := time.Now().Format(time.RFC3339)
+	query := fmt.Sprintf("INSERT INTO %s (user_guid, value, data) values ($1, $2, $3)", ordersTable)
+	_, err := r.db.Exec(query, userGUID, orderNumber, timeNow) //.QueryRow(query, userGUID, orderNumber)
 
 	if err != nil {
 		return err
@@ -33,4 +36,33 @@ func (r *OrderPostgres) CheckOrder(guid, orderNumber string) (string, bool) {
 		return "", true
 	}
 	return userGUID, false
+}
+
+func (r *OrderPostgres) GetOrders(guid string) ([]app.UserOrders, error) {
+	var order app.UserOrders
+	var orders []app.UserOrders
+	queryOrder := fmt.Sprintf("SELECT value, data FROM %s WHERE user_guid = $1 ORDER BY data", ordersTable)
+	rows, err := r.db.Query(queryOrder, guid) //(queryOrder, guid)
+	if err != nil {
+		// fmt.Println(err)
+		return orders, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		// var order string
+		// var data string
+		order.Status = "PROCESSING"
+		if err := rows.Scan(&order.Number, &order.Data); err != nil {
+			// fmt.Println(err)
+			return orders, err
+		}
+		orders = append(orders, order)
+	}
+	err = rows.Err()
+	if err != nil {
+		// fmt.Println(err)
+		return orders, err
+	}
+	// fmt.Println(order)
+	return orders, nil
 }
