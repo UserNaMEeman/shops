@@ -21,16 +21,8 @@ func NewOrdersService(repo repository.Orders, asURL string) *Order {
 	return &Order{repo: repo, asURL: asURL}
 }
 
-// type GetAccrual struct {
-// 	accrual accrual.AccrualOrder
-// }
-
-// func NewAccrualService(accrual accrual.AccrualOrder) *GetAccrual {
-// 	return &GetAccrual{accrual: accrual}
-// }
-
 func (order *Order) accrualOrder(number string) app.Accruals {
-	numberURL := order.asURL + "//api/orders/" + number
+	numberURL := order.asURL + "/api/orders/" + number
 	res, err := occrualOrder(numberURL)
 	if err != nil {
 		fmt.Println(err)
