@@ -101,6 +101,7 @@ func occrualOrder(url string) (app.Accruals, error) {
 		return accrual, err
 	}
 	resp, err := clinet.Do(request)
+	fmt.Println("status code: ", resp.StatusCode)
 	if err != nil {
 		return accrual, err
 	}
