@@ -30,7 +30,7 @@ func NewOrdersService(repo repository.Orders, asURL string) *Order {
 // }
 
 func (order *Order) accrualOrder(number string) app.Accruals {
-	numberURL := order.asURL + number
+	numberURL := order.asURL + "//api/orders/" + number
 	res, err := occrualOrder(numberURL)
 	if err != nil {
 		fmt.Println(err)
