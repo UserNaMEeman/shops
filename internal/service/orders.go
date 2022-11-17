@@ -36,6 +36,7 @@ func (order *Order) accrualOrder(number string) app.Accruals {
 		fmt.Println(err)
 	}
 	// res := app.Accruals{}
+	fmt.Println("accrual: ", res)
 	return res
 }
 
