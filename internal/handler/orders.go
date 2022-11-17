@@ -60,7 +60,7 @@ func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
-
+	fmt.Println(orders)
 	data, err := json.Marshal(orders)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
