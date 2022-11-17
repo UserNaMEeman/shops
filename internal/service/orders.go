@@ -55,8 +55,13 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 	}
 	for i := 0; i < len(orders); i++ {
 		res := order.accrualOrder(orders[i].Order)
-		orders[i].Accrual = res.Accrual
-		orders[i].Status = res.Status
+		if res.Accrual != "" {
+			orders[i].Accrual = res.Accrual
+		}
+		if res.Status != "" {
+			orders[i].Status = res.Status
+		}
+
 		// fmt.Println(&a[i])
 	}
 	return orders, nil
