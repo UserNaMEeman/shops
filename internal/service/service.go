@@ -1,9 +1,6 @@
 package service
 
 import (
-	"crypto/md5"
-	"encoding/hex"
-
 	"github.com/UserNaMEeman/shops/app"
 	"github.com/UserNaMEeman/shops/internal/repository"
 )
@@ -19,9 +16,15 @@ type Orders interface {
 	UploadOrderNumber(guid, number string) error
 	CheckOrder(guid, orderNumber string) (string, bool)
 	GetOrders(guid string) ([]app.UserOrders, error)
+	// accrualOrder() app.Accruals
 } //приём номеров заказов от зарегистрированных пользователей;
 
-type AccountingOrders interface{} //учёт и ведение списка переданных номеров заказов зарегистрированного пользователя;
+// type AccrualOrder interface {
+// 	GetAccrualInformation(urlAccrualSystem string) (app.Accruals, error)
+// }
+
+type AccountingOrders interface {
+} //учёт и ведение списка переданных номеров заказов зарегистрированного пользователя;
 
 type AccountingUser interface{} //учёт и ведение накопительного счёта зарегистрированного пользователя;
 
@@ -32,60 +35,17 @@ type Rewards interface{} //начисление за каждый подходя
 type Service struct {
 	Authorization
 	Orders
+	// AccrualOrder
 	AccountingOrders
 	AccountingUser
 	LoyaltyPoints
 	Rewards
 }
 
-func NewServices(repos *repository.Repository) *Service {
+func NewServices(repos *repository.Repository, asURL string) *Service {
 	return &Service{
 		Authorization: NewAuthService(repos.Authorization),
-		Orders:        NewOrdersService(repos.Orders),
+		Orders:        NewOrdersService(repos.Orders, asURL),
+		// AccrualOrder:  NewAccrualService(accrual.AccrualOrder),
 	}
 }
-
-////////////////////////////
-///////////////////////////
-//////////////////////////
-/////////////////////////
-////////////////////////
-///////////////////////
-//////////////////////
-/////////////////////
-////////////////////
-///////////////////
-//////////////////
-/////////////////
-////////////////
-///////////////
-//////////////
-/////////////
-////////////
-///////////
-//////////
-/////////
-////////
-///////
-//////
-/////
-////
-///
-//
-type Hash interface {
-	GenerateHash(string) string
-	// CheckHash(string) bool
-}
-
-type MyHash struct{}
-
-func (*MyHash) GenerateHash(password string) string {
-	hash := md5.Sum([]byte(password))
-	// return string(hash[:])
-	return hex.EncodeToString(hash[:])
-}
-
-// func (*md5Hash) CheckHash(password string) string {
-// 	hash := md5.Sum([]byte(password))
-// 	return string(hash[:])
-// }

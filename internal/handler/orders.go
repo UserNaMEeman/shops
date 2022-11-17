@@ -43,6 +43,10 @@ func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
+	// var app.Ordersapp
+	// accrualUrl := os.Getenv()
+	// accurals := app.Accruals{}
+	// userOrder := []app.UserOrders{}
 	ctx := r.Context()
 	guid := fmt.Sprintf("%s", ctx.Value("guid"))
 	newOrder := h.services.Orders
@@ -63,15 +67,11 @@ func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Add("Content-Type", "application/json")
+
 	_, err = w.Write(data)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	// w.WriteHeader(http.StatusOK)
 
-	// for _, i := range orders {
-	// fmt.Println("number: ", i.Number, "	data: ", i.Data.Format(time.RFC3339))
-	// fmt.Println("data: ", i.Data.Format(time.RFC3339))
-	// }
 }

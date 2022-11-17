@@ -17,6 +17,10 @@ type Orders interface {
 	GetOrders(guid string) ([]app.UserOrders, error)
 } //приём номеров заказов от зарегистрированных пользователей;
 
+// type AccrualOrder interface {
+// 	GetAccrualInformation(urlAccrualSystem string) (app.Accruals, error)
+// }
+
 type AccountingOrders interface{} //учёт и ведение списка переданных номеров заказов зарегистрированного пользователя;
 
 type AccountingUser interface{} //учёт и ведение накопительного счёта зарегистрированного пользователя;

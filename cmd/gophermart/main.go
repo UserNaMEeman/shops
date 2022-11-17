@@ -48,7 +48,7 @@ func main() {
 		logrus.Println(errs)
 	}
 	repos := repository.NewRepository(db)
-	services := service.NewServices(repos)
+	services := service.NewServices(repos, as)
 	handlers := handler.NewHandler(services)
 	// srv := new(app.Server)
 	if err := http.ListenAndServe(addr, handlers.InitRoutes()); err != nil {

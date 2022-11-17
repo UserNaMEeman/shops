@@ -52,7 +52,7 @@ func (r *OrderPostgres) GetOrders(guid string) ([]app.UserOrders, error) {
 		// var order string
 		// var data string
 		order.Status = "PROCESSING"
-		if err := rows.Scan(&order.Number, &order.Data); err != nil {
+		if err := rows.Scan(&order.Order, &order.Data); err != nil {
 			// fmt.Println(err)
 			return orders, err
 		}

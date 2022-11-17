@@ -1,7 +1,11 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
+	"net/http"
 	"strconv"
 
 	"github.com/UserNaMEeman/shops/app"
@@ -9,11 +13,30 @@ import (
 )
 
 type Order struct {
-	repo repository.Orders
+	repo  repository.Orders
+	asURL string
 }
 
-func NewOrdersService(repo repository.Orders) *Order {
-	return &Order{repo: repo}
+func NewOrdersService(repo repository.Orders, asURL string) *Order {
+	return &Order{repo: repo, asURL: asURL}
+}
+
+// type GetAccrual struct {
+// 	accrual accrual.AccrualOrder
+// }
+
+// func NewAccrualService(accrual accrual.AccrualOrder) *GetAccrual {
+// 	return &GetAccrual{accrual: accrual}
+// }
+
+func (order *Order) accrualOrder(number string) app.Accruals {
+	numberURL := order.asURL + number
+	res, err := occrualOrder(numberURL)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// res := app.Accruals{}
+	return res
 }
 
 func (order *Order) UploadOrderNumber(guid, orderNumber string) error {
@@ -32,7 +55,18 @@ func (order *Order) CheckOrder(guid, orderNumber string) (string, bool) {
 }
 
 func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
-	return order.repo.GetOrders(guid)
+	// return order.repo.GetOrders(guid)
+	orders, err := order.repo.GetOrders(guid)
+	if err != nil {
+		return orders, err
+	}
+	for i := 0; i < len(orders); i++ {
+		res := order.accrualOrder(orders[i].Order)
+		orders[i].Accrual = res.Accrual
+		orders[i].Status = res.Status
+		// fmt.Println(&a[i])
+	}
+	return orders, nil
 }
 
 func valid(number int) bool {
@@ -56,4 +90,23 @@ func checksum(number int) int {
 		number = number / 10
 	}
 	return luhn % 10
+}
+
+func occrualOrder(url string) (app.Accruals, error) {
+	accrual := app.Accruals{}
+	clinet := http.Client{}
+	request, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return accrual, err
+	}
+	resp, err := clinet.Do(request)
+	if err != nil {
+		return accrual, err
+	}
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return accrual, err
+	}
+	json.Unmarshal(data, &accrual)
+	return accrual, nil
 }
