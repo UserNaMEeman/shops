@@ -52,9 +52,11 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 		if res.Order == "" || res.Status == "" {
 			continue
 		}
-		fmt.Println("accrual: ", res)
+		// fmt.Println("accrual: ", res)
 		respOrders = append(respOrders, i)
+		fmt.Println("respOrders: ", respOrders)
 	}
+	return respOrders, nil
 	// for i := 0; i < len(orders); i++ {
 	// res, err := order.accrualOrder(orders[i].Order)
 	// if err != nil {
@@ -72,7 +74,7 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 	// 	orders[i].Status = res.Status
 	// }
 	// }
-	return respOrders, nil
+	// return respOrders, nil
 }
 
 func (order *Order) accrualOrder(number string) (app.Accruals, error) {
@@ -82,7 +84,7 @@ func (order *Order) accrualOrder(number string) (app.Accruals, error) {
 		fmt.Println(err)
 		return app.Accruals{}, err
 	}
-	fmt.Println("accrual: ", res)
+	// fmt.Println("accrual: ", res)
 	return res, nil
 }
 
@@ -94,14 +96,16 @@ func getOrder(url string) (app.Accruals, error) {
 		return app.Accruals{}, err
 	}
 	resp, err := clinet.Do(request)
-	fmt.Println("status code: ", resp.StatusCode)
+	body := resp.Body
+	defer resp.Body.Close()
 	if resp.StatusCode == 204 {
+		fmt.Println("status code: ", resp.StatusCode)
 		return app.Accruals{}, nil
 	}
 	if err != nil {
 		return app.Accruals{}, err
 	}
-	data, err := io.ReadAll(resp.Body)
+	data, err := io.ReadAll(body)
 	if err != nil {
 		return app.Accruals{}, err
 	}
