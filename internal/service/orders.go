@@ -38,6 +38,7 @@ func (order *Order) CheckOrder(guid, orderNumber string) (string, bool) {
 
 func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 	// return order.repo.GetOrders(guid)
+	fmt.Println("GUID: ", guid)
 	orders, err := order.repo.GetOrders(guid)
 	if err != nil {
 		return orders, err
