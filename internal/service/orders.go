@@ -55,6 +55,8 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 			fmt.Println("res is empty")
 			return []app.UserOrders{}, nil
 			// continue
+		} else {
+			fmt.Println("res.Order: ", res.Order, "res.Status: ", res.Status)
 		}
 		// fmt.Println("accrual: ", res)
 		respOrders = append(respOrders, i)
