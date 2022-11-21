@@ -58,8 +58,14 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 		} else {
 			fmt.Println("res.Order: ", res.Order, "res.Status: ", res.Status)
 		}
+		userOrder := app.UserOrders{
+			Order:   res.Order,
+			Status:  res.Status,
+			Accrual: res.Accrual,
+			Date:    i.Date,
+		}
 		// fmt.Println("accrual: ", res)
-		respOrders = append(respOrders, i)
+		respOrders = append(respOrders, userOrder)
 		fmt.Println("respOrders: ", respOrders)
 	}
 	return respOrders, nil
