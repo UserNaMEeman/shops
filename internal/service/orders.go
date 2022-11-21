@@ -21,17 +21,6 @@ func NewOrdersService(repo repository.Orders, asURL string) *Order {
 	return &Order{repo: repo, asURL: asURL}
 }
 
-func (order *Order) accrualOrder(number string) app.Accruals {
-	numberURL := order.asURL + "/api/orders/" + number
-	res, err := getOrder(numberURL)
-	if err != nil {
-		fmt.Println(err)
-	}
-	// res := app.Accruals{}
-	fmt.Println("accrual: ", res)
-	return res
-}
-
 func (order *Order) UploadOrderNumber(guid, orderNumber string) error {
 	num, err := strconv.Atoi(orderNumber)
 	if err != nil {
@@ -54,7 +43,11 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 		return orders, err
 	}
 	for i := 0; i < len(orders); i++ {
-		res := order.accrualOrder(orders[i].Order)
+		res, err := order.accrualOrder(orders[i].Order)
+		if err != nil {
+			fmt.Println(err)
+			return []app.UserOrders{}, err
+		}
 		fmt.Println("accrual: ", res)
 		if res.Accrual != "" {
 			orders[i].Accrual = res.Accrual
@@ -62,10 +55,42 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 		if res.Status != "" {
 			orders[i].Status = res.Status
 		}
-
-		// fmt.Println(&a[i])
 	}
 	return orders, nil
+}
+
+func (order *Order) accrualOrder(number string) (app.Accruals, error) {
+	numberURL := order.asURL + "/api/orders/" + number
+	res, err := getOrder(numberURL)
+	if err != nil {
+		fmt.Println(err)
+		return app.Accruals{}, err
+	}
+	fmt.Println("accrual: ", res)
+	return res, nil
+}
+
+func getOrder(url string) (app.Accruals, error) {
+	accrual := app.Accruals{}
+	clinet := http.Client{}
+	request, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return app.Accruals{}, err
+	}
+	resp, err := clinet.Do(request)
+	fmt.Println("status code: ", resp.StatusCode)
+	if resp.StatusCode == 204 {
+		return app.Accruals{}, err
+	}
+	if err != nil {
+		return app.Accruals{}, err
+	}
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return app.Accruals{}, err
+	}
+	json.Unmarshal(data, &accrual)
+	return accrual, nil
 }
 
 func valid(number int) bool {
@@ -89,24 +114,4 @@ func checksum(number int) int {
 		number = number / 10
 	}
 	return luhn % 10
-}
-
-func getOrder(url string) (app.Accruals, error) {
-	accrual := app.Accruals{}
-	clinet := http.Client{}
-	request, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return accrual, err
-	}
-	resp, err := clinet.Do(request)
-	fmt.Println("status code: ", resp.StatusCode)
-	if err != nil {
-		return accrual, err
-	}
-	data, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return accrual, err
-	}
-	json.Unmarshal(data, &accrual)
-	return accrual, nil
 }
