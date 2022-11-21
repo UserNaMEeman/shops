@@ -28,6 +28,7 @@ func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusUnprocessableEntity)
 			return
 		}
+		fmt.Println("guid: ", guid, "order: ", string(body))
 		w.WriteHeader(http.StatusAccepted)
 		return
 	}
