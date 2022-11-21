@@ -43,23 +43,25 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 	if err != nil {
 		return []app.UserOrders{}, err
 	}
-	var respOrders []app.UserOrders
-	for _, i := range orders {
-		res, err := order.accrualOrder(i.Order)
-		if err != nil {
-			fmt.Println(err)
-			return []app.UserOrders{}, err
-		}
-		if res.Order == "" || res.Status == "" {
-			fmt.Println("res is empty")
-			return []app.UserOrders{}, nil
-			// continue
-		}
-		// fmt.Println("accrual: ", res)
-		respOrders = append(respOrders, i)
-		fmt.Println("respOrders: ", respOrders)
-	}
-	return respOrders, nil
+	return orders, nil
+	// var respOrders []app.UserOrders
+	// for _, i := range orders {
+	// 	res, err := order.accrualOrder(i.Order)
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 		return []app.UserOrders{}, err
+	// 	}
+	// 	if res.Order == "" || res.Status == "" {
+	// 		fmt.Println("res is empty")
+	// 		return []app.UserOrders{}, nil
+	// 		// continue
+	// 	}
+	// 	// fmt.Println("accrual: ", res)
+	// 	respOrders = append(respOrders, i)
+	// 	fmt.Println("respOrders: ", respOrders)
+	// }
+	// return respOrders, nil
+
 	// for i := 0; i < len(orders); i++ {
 	// res, err := order.accrualOrder(orders[i].Order)
 	// if err != nil {
