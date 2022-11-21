@@ -42,21 +42,37 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 	if err != nil {
 		return orders, err
 	}
-	for i := 0; i < len(orders); i++ {
-		res, err := order.accrualOrder(orders[i].Order)
+	var respOrders []app.UserOrders
+	for _, i := range orders {
+		res, err := order.accrualOrder(i.Order)
 		if err != nil {
 			fmt.Println(err)
 			return []app.UserOrders{}, err
 		}
+		if res.Order == "" || res.Status == "" {
+			continue
+		}
 		fmt.Println("accrual: ", res)
-		if res.Accrual != "" {
-			orders[i].Accrual = res.Accrual
-		}
-		if res.Status != "" {
-			orders[i].Status = res.Status
-		}
+		respOrders = append(respOrders, i)
 	}
-	return orders, nil
+	// for i := 0; i < len(orders); i++ {
+	// res, err := order.accrualOrder(orders[i].Order)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// 	return []app.UserOrders{}, err
+	// }
+	// if res.Order == "" {
+
+	// }
+	// fmt.Println("accrual: ", res)
+	// if res.Accrual != "" {
+	// 	orders[i].Accrual = res.Accrual
+	// }
+	// if res.Status != "" {
+	// 	orders[i].Status = res.Status
+	// }
+	// }
+	return respOrders, nil
 }
 
 func (order *Order) accrualOrder(number string) (app.Accruals, error) {
@@ -80,7 +96,7 @@ func getOrder(url string) (app.Accruals, error) {
 	resp, err := clinet.Do(request)
 	fmt.Println("status code: ", resp.StatusCode)
 	if resp.StatusCode == 204 {
-		return app.Accruals{}, err
+		return app.Accruals{}, nil
 	}
 	if err != nil {
 		return app.Accruals{}, err
