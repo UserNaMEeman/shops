@@ -50,7 +50,8 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 			return []app.UserOrders{}, err
 		}
 		if res.Order == "" || res.Status == "" {
-			continue
+			return []app.UserOrders{}, nil
+			// continue
 		}
 		// fmt.Println("accrual: ", res)
 		respOrders = append(respOrders, i)

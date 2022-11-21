@@ -59,6 +59,6 @@ func (r *OrderPostgres) GetOrders(guid string) ([]app.UserOrders, error) {
 		// fmt.Println(err)
 		return orders, err
 	}
-	fmt.Println("orders: ", order)
+	// fmt.Println("orders: ", order)
 	return orders, nil
 }
