@@ -41,7 +41,7 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 	fmt.Println("GUID: ", guid)
 	orders, err := order.repo.GetOrders(guid)
 	if err != nil {
-		return orders, err
+		return []app.UserOrders{}, err
 	}
 	var respOrders []app.UserOrders
 	for _, i := range orders {
