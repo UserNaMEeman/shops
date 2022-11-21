@@ -56,7 +56,7 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 			return []app.UserOrders{}, nil
 			// continue
 		} else {
-			fmt.Println("res.Order: ", res.Order, "res.Status: ", res.Status)
+			fmt.Println("res.Accrual: ", res.Accrual, "res.Status: ", res.Status)
 		}
 		userOrder := app.UserOrders{
 			Order:   res.Order,
