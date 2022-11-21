@@ -11,12 +11,12 @@ type User struct {
 type UserOrders struct {
 	Order   string    `json:"number"`
 	Status  string    `json:"status"`
-	Accrual string    `json:"accrual,omitempty"`
+	Accrual float64   `json:"accrual,omitempty"`
 	Date    time.Time `json:"uploaded_at"`
 }
 
 type Accruals struct {
-	Order   string `json:"order,omitempty"`
-	Status  string `json:"status,omitempty"`
-	Accrual string `json:"accrual,omitempty"`
+	Order   string  `json:"order,omitempty"`
+	Status  string  `json:"status,omitempty"`
+	Accrual float64 `json:"accrual,omitempty"`
 }
