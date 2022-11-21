@@ -61,7 +61,7 @@ func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	fmt.Println(string(data))
+	fmt.Println("send to user: ", string(data))
 	w.Header().Add("Content-Type", "application/json")
 
 	_, err = w.Write(data)

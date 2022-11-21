@@ -51,6 +51,7 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 			return []app.UserOrders{}, err
 		}
 		if res.Order == "" || res.Status == "" {
+			fmt.Println("res is empty")
 			return []app.UserOrders{}, nil
 			// continue
 		}
