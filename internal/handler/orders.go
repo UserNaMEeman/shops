@@ -43,10 +43,6 @@ func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
-	// var app.Ordersapp
-	// accrualUrl := os.Getenv()
-	// accurals := app.Accruals{}
-	// userOrder := []app.UserOrders{}
 	ctx := r.Context()
 	guid := fmt.Sprintf("%s", ctx.Value("guid"))
 	newOrder := h.services.Orders

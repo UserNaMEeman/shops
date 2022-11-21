@@ -23,7 +23,7 @@ func NewOrdersService(repo repository.Orders, asURL string) *Order {
 
 func (order *Order) accrualOrder(number string) app.Accruals {
 	numberURL := order.asURL + "/api/orders/" + number
-	res, err := occrualOrder(numberURL)
+	res, err := getOrder(numberURL)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -55,6 +55,7 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 	}
 	for i := 0; i < len(orders); i++ {
 		res := order.accrualOrder(orders[i].Order)
+		fmt.Println("accrual: ", res)
 		if res.Accrual != "" {
 			orders[i].Accrual = res.Accrual
 		}
@@ -90,7 +91,7 @@ func checksum(number int) int {
 	return luhn % 10
 }
 
-func occrualOrder(url string) (app.Accruals, error) {
+func getOrder(url string) (app.Accruals, error) {
 	accrual := app.Accruals{}
 	clinet := http.Client{}
 	request, err := http.NewRequest("GET", url, nil)

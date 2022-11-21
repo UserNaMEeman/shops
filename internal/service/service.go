@@ -26,7 +26,9 @@ type Orders interface {
 type AccountingOrders interface {
 } //учёт и ведение списка переданных номеров заказов зарегистрированного пользователя;
 
-type AccountingUser interface{} //учёт и ведение накопительного счёта зарегистрированного пользователя;
+type AccountingUser interface {
+	GetBalance(guid string)
+} //учёт и ведение накопительного счёта зарегистрированного пользователя;
 
 type LoyaltyPoints interface{} //проверка принятых номеров заказов через систему расчёта баллов лояльности;
 

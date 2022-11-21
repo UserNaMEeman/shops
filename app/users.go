@@ -12,7 +12,7 @@ type UserOrders struct {
 	Order   string    `json:"number"`
 	Status  string    `json:"status"`
 	Accrual string    `json:"accural,omitempty"`
-	Data    time.Time `json:"uploaded_at"`
+	Date    time.Time `json:"uploaded_at"`
 }
 
 type Accruals struct {

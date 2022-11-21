@@ -49,11 +49,7 @@ func (r *OrderPostgres) GetOrders(guid string) ([]app.UserOrders, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		// var order string
-		// var data string
-		order.Status = "PROCESSING"
-		if err := rows.Scan(&order.Order, &order.Data); err != nil {
-			// fmt.Println(err)
+		if err := rows.Scan(&order.Order, &order.Date); err != nil {
 			return orders, err
 		}
 		orders = append(orders, order)
@@ -63,6 +59,6 @@ func (r *OrderPostgres) GetOrders(guid string) ([]app.UserOrders, error) {
 		// fmt.Println(err)
 		return orders, err
 	}
-	// fmt.Println(order)
+	fmt.Println("orders: ", order)
 	return orders, nil
 }
