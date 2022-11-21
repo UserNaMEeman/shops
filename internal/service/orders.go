@@ -122,6 +122,7 @@ func getOrder(url string) (app.Accruals, error) {
 	if err != nil {
 		return app.Accruals{}, err
 	}
+	fmt.Println("raw response: ", string(data))
 	json.Unmarshal(data, &accrual)
 	return accrual, nil
 }
