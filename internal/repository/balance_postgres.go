@@ -30,5 +30,6 @@ func (r *BalancePostgres) GetBalance(guid string, totalAccrual float64) (app.Bal
 	}
 	balnce.Current = totalAccrual - withdrawn
 	balnce.Withdrawn = withdrawn
+	fmt.Println("postgre balance: ", balnce)
 	return balnce, nil
 }
