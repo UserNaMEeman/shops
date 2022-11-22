@@ -24,7 +24,7 @@ func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
 	orderGUID, free := order.CheckOrder(guid, string(body))
 	if free {
 		if err = order.UploadOrderNumber(guid, string(body)); err != nil {
-			// fmt.Println("ERRRROOOOOR: ---------------------------", err)
+			fmt.Println("ERRRROOOOOR: ---------------------------", err)
 			w.WriteHeader(http.StatusUnprocessableEntity)
 			return
 		}
