@@ -41,7 +41,7 @@ func (r *OrderPostgres) CheckOrder(guid, orderNumber string) (string, bool) {
 func (r *OrderPostgres) GetOrders(guid string) ([]app.UserOrders, error) {
 	var order app.UserOrders
 	var orders []app.UserOrders
-	queryOrder := fmt.Sprintf("SELECT value, date FROM %s WHERE user_guid = $1 ORDER BY data", ordersTable)
+	queryOrder := fmt.Sprintf("SELECT value, date FROM %s WHERE user_guid = $1 ORDER BY date", ordersTable)
 	rows, err := r.db.Query(queryOrder, guid) //(queryOrder, guid)
 	if err != nil {
 		// fmt.Println(err)
