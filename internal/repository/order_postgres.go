@@ -18,7 +18,7 @@ func NewOrderPostgres(db *sqlx.DB) *OrderPostgres {
 
 func (r *OrderPostgres) UploadOrderNumber(userGUID, orderNumber string) error {
 	timeNow := time.Now().Format(time.RFC3339)
-	query := fmt.Sprintf("INSERT INTO %s (user_guid, value, data) values ($1, $2, $3)", ordersTable)
+	query := fmt.Sprintf("INSERT INTO %s (user_guid, value, date) values ($1, $2, $3)", ordersTable)
 	_, err := r.db.Exec(query, userGUID, orderNumber, timeNow) //.QueryRow(query, userGUID, orderNumber)
 
 	if err != nil {
