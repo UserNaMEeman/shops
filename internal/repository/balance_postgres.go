@@ -19,13 +19,8 @@ func (r *BalancePostgres) GetBalance(guid string, totalAccrual float64) (app.Bal
 	var withdrawn float64
 	balnce := app.Balance{}
 	queryOrder := fmt.Sprintf("SELECT withdrawn FROM %s WHERE user_guid = $1", balanceTable)
-	rows, err := r.db.Query(queryOrder, guid) //(queryOrder, guid)
-	if err != nil {
-		// fmt.Println(err)
-		return app.Balance{}, err
-	}
-	defer rows.Close()
-	if err := rows.Scan(&withdrawn); err != nil {
+	row := r.db.QueryRow(queryOrder, guid) //(queryOrder, guid)
+	if err := row.Scan(&withdrawn); err != nil {
 		return app.Balance{}, err
 	}
 	balnce.Current = totalAccrual - withdrawn
