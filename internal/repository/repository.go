@@ -11,19 +11,16 @@ type Authorization interface { //регистрация, аутентифика�
 }
 
 type Orders interface {
-	// GetNumber(app.User) (string, error)
 	UploadOrderNumber(guid, orderNumber string) error
 	CheckOrder(guid, orderNumber string) (string, bool)
 	GetOrders(guid string) ([]app.UserOrders, error)
 } //приём номеров заказов от зарегистрированных пользователей;
 
-// type AccrualOrder interface {
-// 	GetAccrualInformation(urlAccrualSystem string) (app.Accruals, error)
-// }
-
 type AccountingOrders interface{} //учёт и ведение списка переданных номеров заказов зарегистрированного пользователя;
 
-type AccountingUser interface{} //учёт и ведение накопительного счёта зарегистрированного пользователя;
+type AccountingUser interface {
+	GetBalance(guid string, totalAccrual float64) (app.Balance, error)
+} //учёт и ведение накопительного счёта зарегистрированного пользователя;
 
 type LoyaltyPoints interface{} //проверка принятых номеров заказов через систему расчёта баллов лояльности;
 
@@ -40,7 +37,8 @@ type Repository struct {
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
-		Authorization: NewAuthPostgres(db),
-		Orders:        NewOrderPostgres(db),
+		Authorization:  NewAuthPostgres(db),
+		Orders:         NewOrderPostgres(db),
+		AccountingUser: NewBalancePostgres(db),
 	}
 }
