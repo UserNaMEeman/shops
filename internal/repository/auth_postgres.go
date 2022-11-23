@@ -29,6 +29,11 @@ func (r *AuthPostgres) CreateUser(user app.User) (string, error) {
 	if err := row.Scan(&userGUID); err != nil {
 		return "", err
 	}
+	query = fmt.Sprintf("INSERT INTO %s (user_guid, current, withdrawn) values ($1, $2, $3)", balanceTable)
+	_, err := r.db.Exec(query, user.Login, 0, 0)
+	if err != nil {
+		return "", err
+	}
 	return userGUID, nil
 }
 

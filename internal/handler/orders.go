@@ -24,7 +24,6 @@ func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
 	orderGUID, free := order.CheckOrder(guid, string(body))
 	if free {
 		if err = order.UploadOrderNumber(guid, string(body)); err != nil {
-			// fmt.Println(err)
 			w.WriteHeader(http.StatusUnprocessableEntity)
 			return
 		}
@@ -50,6 +49,7 @@ func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
 	orders, err := newOrder.GetOrders(guid)
 	if err != nil {
 		// fmt.Println(err)
+		fmt.Println("GetOrders ERRRROOOOOR: ---------------------------", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -59,6 +59,7 @@ func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
 	}
 	data, err := json.Marshal(orders)
 	if err != nil {
+		fmt.Println("Marshal ERRRROOOOOR: ---------------------------", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -67,6 +68,7 @@ func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
 
 	_, err = w.Write(data)
 	if err != nil {
+		fmt.Println("ERRRROOOOOR: ---------------------------", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

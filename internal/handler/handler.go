@@ -26,6 +26,8 @@ func (h *Handler) InitRoutes() *chi.Mux {
 		router.Use(h.userIdentity)
 		router.Post("/orders", h.uploadOrder) //загрузка пользователем номера заказа для расчёта
 		router.Get("/orders", h.GetOrders)    //получение списка загруженных пользователем номеров заказов, статусов их обработки и информации о начислениях
+		router.Get("/balance", h.GetBalance)  //получение текущего баланса счёта баллов лояльности пользователя
+		//
 	})
 	// router.Post("/api/user/orders", signUp)           //загрузка пользователем номера заказа для расчёта
 	// router.Get("/api/user/balance", signUp)           //получение текущего баланса счёта баллов лояльности пользователя

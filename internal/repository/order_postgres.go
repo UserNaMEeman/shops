@@ -18,7 +18,7 @@ func NewOrderPostgres(db *sqlx.DB) *OrderPostgres {
 
 func (r *OrderPostgres) UploadOrderNumber(userGUID, orderNumber string) error {
 	timeNow := time.Now().Format(time.RFC3339)
-	query := fmt.Sprintf("INSERT INTO %s (user_guid, value, data) values ($1, $2, $3)", ordersTable)
+	query := fmt.Sprintf("INSERT INTO %s (user_guid, value, date) values ($1, $2, $3)", ordersTable)
 	_, err := r.db.Exec(query, userGUID, orderNumber, timeNow) //.QueryRow(query, userGUID, orderNumber)
 
 	if err != nil {
@@ -41,7 +41,7 @@ func (r *OrderPostgres) CheckOrder(guid, orderNumber string) (string, bool) {
 func (r *OrderPostgres) GetOrders(guid string) ([]app.UserOrders, error) {
 	var order app.UserOrders
 	var orders []app.UserOrders
-	queryOrder := fmt.Sprintf("SELECT value, data FROM %s WHERE user_guid = $1 ORDER BY data", ordersTable)
+	queryOrder := fmt.Sprintf("SELECT value, date FROM %s WHERE user_guid = $1 ORDER BY date", ordersTable)
 	rows, err := r.db.Query(queryOrder, guid) //(queryOrder, guid)
 	if err != nil {
 		// fmt.Println(err)

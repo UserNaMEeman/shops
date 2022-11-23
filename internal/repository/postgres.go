@@ -8,8 +8,9 @@ import (
 )
 
 const (
-	ordersTable = "orders"
-	usersTable  = "users"
+	ordersTable  = "orders"
+	usersTable   = "users"
+	balanceTable = "balance"
 )
 
 type Config struct {
@@ -45,7 +46,7 @@ func CreateTables(db *sqlx.DB) []error {
 			login varchar(255) not null unique,
 			user_guid varchar(255) not null unique,
 			password_hash varchar(255) not null
-		)`, "users")
+		)`, usersTable)
 	if _, err := db.Exec(query); err != nil {
 		errors = append(errors, err)
 		// return err
@@ -55,10 +56,30 @@ func CreateTables(db *sqlx.DB) []error {
 		id serial not null unique,
 		user_guid varchar(255) not null,
 		value varchar(255) not null,
-		data timestamp not null
-	)`, "orders")
-	_, err := db.Exec(query)
-	if err != nil {
+		date timestamp not null
+	)`, ordersTable)
+	if _, err := db.Exec(query); err != nil {
+		errors = append(errors, err)
+		// fmt.Println(err)
+	}
+	query = fmt.Sprintf(`CREATE TABLE %s
+	(
+		id serial not null unique,
+		user_guid varchar(255) not null,
+		current numeric,
+		withdrawn numeric
+	)`, balanceTable)
+	if _, err := db.Exec(query); err != nil {
+		errors = append(errors, err)
+	}
+	query = fmt.Sprintf(`CREATE TABLE %s
+	(
+		id serial not null unique,
+		order_num varchar(255) not null,
+		accrual numeric default 0
+	)`, "accrual")
+	if _, err := db.Exec(query); err != nil {
+		fmt.Println(err)
 		errors = append(errors, err)
 	}
 	if len(errors) > 0 {
