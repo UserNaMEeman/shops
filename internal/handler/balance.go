@@ -102,7 +102,8 @@ func (h *Handler) Withdraw(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusPaymentRequired)
 		return
 	}
-	orderGUID, _ := newOrder.CheckOrder(guid, buy.Order)
+	orderGUID, state := newOrder.CheckOrder(guid, buy.Order)
+	fmt.Println("state: ", state, "orderGUID: ", orderGUID, "currentGUID: ", guid)
 	if orderGUID != guid { //if state || orderGUID != guid {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		return
