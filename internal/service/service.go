@@ -22,9 +22,11 @@ type Orders interface {
 
 type AccountingUser interface {
 	GetBalance(guid string, totalAccrual float64) (app.Balance, error)
+	UsePoints(buy app.Buy) error
 } //учёт и ведение накопительного счёта зарегистрированного пользователя;
 
-type LoyaltyPoints interface{} //проверка принятых номеров заказов через систему расчёта баллов лояльности;
+type WithdrawPoints interface {
+} //проверка принятых номеров заказов через систему расчёта баллов лояльности;
 
 type Rewards interface{} //начисление за каждый подходящий номер заказа положенного вознаграждения на счёт лояльности пользователя.
 
@@ -32,7 +34,7 @@ type Service struct {
 	Authorization
 	Orders
 	AccountingUser
-	LoyaltyPoints
+	WithdrawPoints
 	Rewards
 	// AccountingOrders
 }

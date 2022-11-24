@@ -2,6 +2,7 @@ package repository
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/UserNaMEeman/shops/app"
 	"github.com/jmoiron/sqlx"
@@ -27,7 +28,17 @@ func (r *BalancePostgres) GetBalance(guid string, totalAccrual float64) (app.Bal
 	balnce.Withdrawn = withdrawn
 	fmt.Println("postgre balance: ", balnce)
 	return balnce, nil
-
 	// a := app.Balance{totalAccrual, 0}
 	// return a, nil
+}
+
+func (r *BalancePostgres) UsePoints(buy app.Buy) error {
+	now := time.Now()
+	timeNow := now.Format(time.RFC3339)
+	query := fmt.Sprintf("INSERT INTO %s (order_buy, sum, date_buy) values ($1, $2, $3)", buysTable)
+	_, err := r.db.Exec(query, buy.Order, buy.Sum, timeNow) //.QueryRow(query, userGUID, orderNumber)
+	if err != nil {
+		return err
+	}
+	return nil
 }

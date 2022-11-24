@@ -16,3 +16,7 @@ func NewBalanceService(repo repository.AccountingUser) *Balance {
 func (b *Balance) GetBalance(guid string, totalAccrual float64) (app.Balance, error) {
 	return b.repo.GetBalance(guid, totalAccrual)
 }
+
+func (b *Balance) UsePoints(buy app.Buy) error {
+	return b.repo.UsePoints(buy)
+}
