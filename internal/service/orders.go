@@ -35,6 +35,18 @@ func (order *Order) CheckOrder(guid, orderNumber string) (string, bool) {
 	return order.repo.CheckOrder(guid, orderNumber)
 }
 
+func (order *Order) CheckValidOrder(orderNumber string) (bool, error) {
+	num, err := strconv.Atoi(orderNumber)
+	if err != nil {
+		return false, err
+	}
+	if valid(num) {
+		return true, nil
+	} else {
+		return false, nil
+	}
+}
+
 func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 	// return order.repo.GetOrders(guid)
 	// fmt.Println("GUID: ", guid)

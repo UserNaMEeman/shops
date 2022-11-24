@@ -31,18 +31,6 @@ func (h *Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 	// var totalBalace float64
 	ctx := r.Context()
 	guid := fmt.Sprintf("%s", ctx.Value("guid"))
-	// newOrder := h.services.Orders
-	// orders, err := newOrder.GetOrders(guid)
-	// if err != nil {
-	// 	fmt.Println("GetOrders err: ", err)
-	// 	w.WriteHeader(http.StatusInternalServerError)
-	// 	return
-	// }
-
-	// for _, i := range orders {
-	// 	totalBalace = totalBalace + i.Accrual
-	// 	fmt.Println("order current: ", i.Accrual)
-	// }
 	totalBalace, err := h.getTotalBalance(guid)
 	if err != nil {
 		fmt.Println("GetOrders err: ", err)
@@ -102,12 +90,22 @@ func (h *Handler) Withdraw(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusPaymentRequired)
 		return
 	}
-	orderGUID, state := newOrder.CheckOrder(guid, buy.Order)
-	fmt.Println("state: ", state, "orderGUID: ", orderGUID, "currentGUID: ", guid)
-	if orderGUID != guid { //if state || orderGUID != guid {
+	valid, err := newOrder.CheckValidOrder(buy.Order)
+	if err != nil {
+		fmt.Println("valid err: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if !valid {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		return
 	}
+	// orderGUID, state := newOrder.CheckOrder(guid, buy.Order)
+	// fmt.Println("state: ", state, "orderGUID: ", orderGUID, "currentGUID: ", guid)
+	// if orderGUID != guid { //if state || orderGUID != guid {
+	// 	w.WriteHeader(http.StatusUnprocessableEntity)
+	// 	return
+	// }
 	if err = newBalance.UsePoints(buy); err != nil {
 		fmt.Println("Use Points: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
