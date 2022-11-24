@@ -23,7 +23,7 @@ type Orders interface {
 
 type AccountingUser interface {
 	GetBalance(guid string, totalAccrual float64) (app.Balance, error)
-	UsePoints(buy app.Buy) error
+	UsePoints(guid string, buy app.Buy) error
 } //учёт и ведение накопительного счёта зарегистрированного пользователя;
 
 type WithdrawPoints interface {

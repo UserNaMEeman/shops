@@ -32,11 +32,16 @@ func (r *BalancePostgres) GetBalance(guid string, totalAccrual float64) (app.Bal
 	// return a, nil
 }
 
-func (r *BalancePostgres) UsePoints(buy app.Buy) error {
+func (r *BalancePostgres) UsePoints(guid string, buy app.Buy) error {
 	now := time.Now()
 	timeNow := now.Format(time.RFC3339)
 	query := fmt.Sprintf("INSERT INTO %s (order_buy, sum, date_buy) values ($1, $2, $3)", buysTable)
 	_, err := r.db.Exec(query, buy.Order, buy.Sum, timeNow) //.QueryRow(query, userGUID, orderNumber)
+	if err != nil {
+		return err
+	}
+	query = fmt.Sprintf("UPDATE %s SET withdrawn = withdrawn + $1 WHERE user_guid = $2", balanceTable)
+	_, err = r.db.Exec(query, buy.Sum, guid)
 	if err != nil {
 		return err
 	}

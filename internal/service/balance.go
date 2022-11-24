@@ -17,6 +17,6 @@ func (b *Balance) GetBalance(guid string, totalAccrual float64) (app.Balance, er
 	return b.repo.GetBalance(guid, totalAccrual)
 }
 
-func (b *Balance) UsePoints(buy app.Buy) error {
-	return b.repo.UsePoints(buy)
+func (b *Balance) UsePoints(guid string, buy app.Buy) error {
+	return b.repo.UsePoints(guid, buy)
 }

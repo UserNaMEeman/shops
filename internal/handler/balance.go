@@ -106,7 +106,7 @@ func (h *Handler) Withdraw(w http.ResponseWriter, r *http.Request) {
 	// 	w.WriteHeader(http.StatusUnprocessableEntity)
 	// 	return
 	// }
-	if err = newBalance.UsePoints(buy); err != nil {
+	if err = newBalance.UsePoints(guid, buy); err != nil {
 		fmt.Println("Use Points: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
