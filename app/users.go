@@ -31,3 +31,12 @@ type Buy struct {
 	Sum   float64   `json:"sum"`
 	Date  time.Time `json:"processed_at"`
 }
+
+type guid string
+
+const TypeGUID guid = "guid"
+
+// type GUID struct {
+// 	Type  string
+// 	Value string
+// }

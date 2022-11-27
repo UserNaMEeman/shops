@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 	"net/http"
-)
 
-// type guid string
+	"github.com/UserNaMEeman/shops/app"
+)
 
 func (h *Handler) userIdentity(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -21,19 +21,7 @@ func (h *Handler) userIdentity(next http.Handler) http.Handler {
 			return
 		}
 		ctx := r.Context()
-		ctx = context.WithValue(ctx, "guid", userGUID)
+		ctx = context.WithValue(ctx, app.TypeGUID, userGUID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
-
-// func (h *Handler) IsLoggedIn(w http.ResponseWriter, r *http.Request) {
-
-// 	// Obtains cookie from users http.Request
-// 	cookie, err := r.Cookie("SessionID")
-// 	if err != nil {
-// 		// fmt.Println(err)
-// 		// return false/
-// 	}
-// 	sessionID := cookie.Value
-// 	// fmt.Println(sessionID)
-// }
