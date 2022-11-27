@@ -16,7 +16,7 @@ func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ctx := r.Context()
-	guid := fmt.Sprintf("%s", ctx.Value("guid"))
+	guid := fmt.Sprintf("%s", ctx.Value(app.TypeGUID))
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
