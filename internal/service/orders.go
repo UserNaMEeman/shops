@@ -106,7 +106,7 @@ func getOrder(url string) (app.Accruals, error) {
 		fmt.Println("status code for ", url, ": ", resp.StatusCode)
 		numb := strings.Split(url, "/api/orders/")[1]
 		fmt.Println("numb: ", numb)
-		return app.Accruals{Order: numb, Status: "INVALID"}, nil
+		return app.Accruals{Order: numb, Status: "NEW"}, nil
 	}
 	if err != nil {
 		return app.Accruals{}, err
