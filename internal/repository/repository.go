@@ -20,6 +20,8 @@ type AccountingOrders interface{} //учёт и ведение списка пе
 
 type AccountingUser interface {
 	GetBalance(guid string, totalAccrual float64) (app.Balance, error)
+	UsePoints(guid string, buy app.Buy) error
+	GetWithdrawals(guid string) ([]app.Buy, error)
 } //учёт и ведение накопительного счёта зарегистрированного пользователя;
 
 type LoyaltyPoints interface{} //проверка принятых номеров заказов через систему расчёта баллов лояльности;

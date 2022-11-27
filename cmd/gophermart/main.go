@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"net/http"
 
 	"github.com/UserNaMEeman/shops/internal/config"
@@ -30,15 +29,6 @@ func main() {
 	// logrus.SetFormatter(new(logrus.JSONFormatter))
 	flag.Parse()
 	addr, dbURI, as := config.GetConfig(addr, dbAddr, asAddr)
-	fmt.Println("server: ", addr, "databaseURI: ", dbURI, "accural system: ", as)
-	// db, err := repository.NewPostgresDB(repository.Config{
-	// 	Host:     "localhost",
-	// 	Port:     "5432",
-	// 	Username: "postgres",
-	// 	Password: "password",
-	// 	DBName:   "gophermarket",
-	// 	SSLMode:  "disable",
-	// })
 	db, err := repository.NewPostgresDB(dbURI)
 	if err != nil {
 		// fmt.Println(err)
@@ -54,10 +44,4 @@ func main() {
 	if err := http.ListenAndServe(addr, handlers.InitRoutes()); err != nil {
 		logrus.Fatal(err)
 	}
-	// if err := srv.Run(addr, handlers.InitRoutes()); err != nil {
-	// 	logrus.Fatal(err)
-	// }
-	// if err := app.Run(addr, handlers.InitRoutes()); err != nil {
-	// 	logrus.Fatal(err)
-	// }
 }

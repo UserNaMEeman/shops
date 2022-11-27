@@ -44,7 +44,6 @@ func (r *OrderPostgres) GetOrders(guid string) ([]app.UserOrders, error) {
 	queryOrder := fmt.Sprintf("SELECT value, date FROM %s WHERE user_guid = $1 ORDER BY date", ordersTable)
 	rows, err := r.db.Query(queryOrder, guid) //(queryOrder, guid)
 	if err != nil {
-		// fmt.Println(err)
 		return orders, err
 	}
 	defer rows.Close()
@@ -57,9 +56,7 @@ func (r *OrderPostgres) GetOrders(guid string) ([]app.UserOrders, error) {
 	}
 	err = rows.Err()
 	if err != nil {
-		// fmt.Println(err)
 		return orders, err
 	}
-	// fmt.Println("All orders: ", order)
 	return orders, nil
 }

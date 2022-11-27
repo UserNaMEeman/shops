@@ -35,7 +35,7 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 	}
 	token, err := h.services.Authorization.GenerateToken(newUser)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("gen token err: ", err)
 		w.WriteHeader(401)
 		return
 	}
@@ -58,7 +58,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) { // must add 4
 	}
 	token, err := h.services.Authorization.GenerateToken(user)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("gen token err: ", err)
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}

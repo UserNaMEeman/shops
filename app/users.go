@@ -25,3 +25,18 @@ type Balance struct {
 	Current   float64 `json:"current,omitempty"`
 	Withdrawn float64 `json:"withdrawn,omitempty"`
 }
+
+type Buy struct {
+	Order string    `json:"order"`
+	Sum   float64   `json:"sum"`
+	Date  time.Time `json:"processed_at"`
+}
+
+type guid string
+
+const TypeGUID guid = "guid"
+
+// type GUID struct {
+// 	Type  string
+// 	Value string
+// }

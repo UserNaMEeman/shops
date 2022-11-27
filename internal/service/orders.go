@@ -3,9 +3,11 @@ package service
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/UserNaMEeman/shops/app"
 	"github.com/UserNaMEeman/shops/internal/repository"
@@ -35,11 +37,23 @@ func (order *Order) CheckOrder(guid, orderNumber string) (string, bool) {
 	return order.repo.CheckOrder(guid, orderNumber)
 }
 
-func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
-	// return order.repo.GetOrders(guid)
-	// fmt.Println("GUID: ", guid)
-	orders, err := order.repo.GetOrders(guid)
+func (order *Order) CheckValidOrder(orderNumber string) (bool, error) {
+	num, err := strconv.Atoi(orderNumber)
 	if err != nil {
+		return false, err
+	}
+	if valid(num) {
+		return true, nil
+	} else {
+		return false, nil
+	}
+}
+
+func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
+	orders, err := order.repo.GetOrders(guid)
+	fmt.Println("orders for ", guid, ": ", orders)
+	if err != nil {
+		fmt.Println("get orders err for ", guid)
 		return []app.UserOrders{}, err
 	}
 	// return orders, nil
@@ -54,8 +68,6 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 			// fmt.Println("res is empty")
 			return []app.UserOrders{}, nil
 			// continue
-		} else {
-			// fmt.Println("res.Accrual: ", res.Accrual, "res.Status: ", res.Status)
 		}
 		userOrder := app.UserOrders{
 			Order:   res.Order,
@@ -63,9 +75,7 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 			Accrual: res.Accrual,
 			Date:    i.Date,
 		}
-		// fmt.Println("accrual: ", res)
 		respOrders = append(respOrders, userOrder)
-		// fmt.Println("respOrders: ", respOrders)
 	}
 	return respOrders, nil
 }
@@ -91,8 +101,10 @@ func getOrder(url string) (app.Accruals, error) {
 	body := resp.Body
 	defer resp.Body.Close()
 	if resp.StatusCode == 204 {
-		// fmt.Println("status code: ", resp.StatusCode)
-		return app.Accruals{}, nil
+		fmt.Println("status code for ", url, ": ", resp.StatusCode)
+		numb := strings.Split(url, "/api/orders/")[1]
+		fmt.Println("numb: ", numb)
+		return app.Accruals{Order: numb, Status: "NEW"}, nil
 	}
 	if err != nil {
 		return app.Accruals{}, err
@@ -101,7 +113,7 @@ func getOrder(url string) (app.Accruals, error) {
 	if err != nil {
 		return app.Accruals{}, err
 	}
-	// fmt.Println("raw response: ", string(data))
+	fmt.Println("raw response for ", url, ": ", string(data))
 	json.Unmarshal(data, &accrual)
 	return accrual, nil
 }

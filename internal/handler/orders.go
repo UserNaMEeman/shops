@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/UserNaMEeman/shops/app"
 )
 
 func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
@@ -14,7 +16,7 @@ func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ctx := r.Context()
-	guid := fmt.Sprintf("%s", ctx.Value("guid"))
+	guid := fmt.Sprintf("%s", ctx.Value(app.TypeGUID))
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -38,28 +40,24 @@ func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusConflict)
 		return
 	}
-
-	// h.services.UploadOrderNumber(string(order))
 }
 
-func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) getOrders(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	guid := fmt.Sprintf("%s", ctx.Value("guid"))
+	guid := fmt.Sprintf("%s", ctx.Value(app.TypeGUID))
 	newOrder := h.services.Orders
 	orders, err := newOrder.GetOrders(guid)
 	if err != nil {
-		// fmt.Println(err)
-		fmt.Println("GetOrders ERRRROOOOOR: ---------------------------", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	if len(orders) == 0 {
+		fmt.Println("guid for no content: ", guid)
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 	data, err := json.Marshal(orders)
 	if err != nil {
-		fmt.Println("Marshal ERRRROOOOOR: ---------------------------", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -68,7 +66,6 @@ func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
 
 	_, err = w.Write(data)
 	if err != nil {
-		fmt.Println("ERRRROOOOOR: ---------------------------", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

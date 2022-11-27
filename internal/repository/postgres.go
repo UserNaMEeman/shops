@@ -11,6 +11,7 @@ const (
 	ordersTable  = "orders"
 	usersTable   = "users"
 	balanceTable = "balance"
+	buysTable    = "buys"
 )
 
 type Config struct {
@@ -79,7 +80,19 @@ func CreateTables(db *sqlx.DB) []error {
 		accrual numeric default 0
 	)`, "accrual")
 	if _, err := db.Exec(query); err != nil {
-		fmt.Println(err)
+		fmt.Println("create table err: ", err)
+		errors = append(errors, err)
+	}
+	query = fmt.Sprintf(`CREATE TABLE %s
+	(
+		id serial not null unique,
+		user_guid varchar(255) not null,
+		order_buy varchar(255) not null,
+		sum numeric default 0,
+		date_buy timestamp not null
+	)`, buysTable)
+	if _, err := db.Exec(query); err != nil {
+		fmt.Println("create table err: ", err)
 		errors = append(errors, err)
 	}
 	if len(errors) > 0 {
