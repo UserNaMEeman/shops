@@ -102,7 +102,7 @@ func getOrder(url string) (app.Accruals, error) {
 	body := resp.Body
 	defer resp.Body.Close()
 	if resp.StatusCode == 204 {
-		// fmt.Println("status code: ", resp.StatusCode)
+		fmt.Println("status code for ", url, ": ", resp.StatusCode)
 		return app.Accruals{}, nil
 	}
 	if err != nil {
@@ -112,7 +112,7 @@ func getOrder(url string) (app.Accruals, error) {
 	if err != nil {
 		return app.Accruals{}, err
 	}
-	// fmt.Println("raw response: ", string(data))
+	fmt.Println("raw response for ", url, ": ", string(data))
 	json.Unmarshal(data, &accrual)
 	return accrual, nil
 }
