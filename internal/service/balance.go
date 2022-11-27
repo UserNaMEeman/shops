@@ -24,7 +24,7 @@ func (b *Balance) UsePoints(guid string, buy app.Buy) error {
 	return b.repo.UsePoints(guid, buy)
 }
 
-func (b *Balance) GetWithdrawals(guid string) (app.Buy, error) {
+func (b *Balance) GetWithdrawals(guid string) ([]app.Buy, error) {
 
-	return app.Buy{}, nil
+	return b.repo.GetWithdrawals(guid)
 }

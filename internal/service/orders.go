@@ -48,8 +48,6 @@ func (order *Order) CheckValidOrder(orderNumber string) (bool, error) {
 }
 
 func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
-	// return order.repo.GetOrders(guid)
-	// fmt.Println("GUID: ", guid)
 	orders, err := order.repo.GetOrders(guid)
 	if err != nil {
 		return []app.UserOrders{}, err
@@ -75,9 +73,7 @@ func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 			Accrual: res.Accrual,
 			Date:    i.Date,
 		}
-		// fmt.Println("accrual: ", res)
 		respOrders = append(respOrders, userOrder)
-		// fmt.Println("respOrders: ", respOrders)
 	}
 	return respOrders, nil
 }

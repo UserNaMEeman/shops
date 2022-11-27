@@ -104,3 +104,36 @@ func (h *Handler) Withdraw(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("guid: ", guid, "order: ", buy.Order)
 	w.WriteHeader(http.StatusOK)
 }
+
+func (h *Handler) Withdrawals(w http.ResponseWriter, r *http.Request) {
+	newBalance := h.services.AccountingUser
+	ctx := r.Context()
+	guid := fmt.Sprintf("%s", ctx.Value("guid"))
+
+	buys, err := newBalance.GetWithdrawals(guid)
+	if err != nil {
+		if len(buys) == 0 {
+			// fmt.Println("valid err: ", err)
+			w.WriteHeader(http.StatusNoContent)
+			return
+		} else {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+	}
+	data, err := json.Marshal(buys)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	fmt.Println("send wths: ", string(data))
+	w.Header().Add("Content-Type", "application/json")
+
+	_, err = w.Write(data)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	// wth, err := h.services.WithdrawPoints
+}

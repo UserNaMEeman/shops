@@ -49,7 +49,7 @@ func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
 	orders, err := newOrder.GetOrders(guid)
 	if err != nil {
 		// fmt.Println(err)
-		fmt.Println("GetOrders ERRRROOOOOR: ---------------------------", err)
+		// fmt.Println("GetOrders ERRRROOOOOR: ---------------------------", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -59,7 +59,7 @@ func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
 	}
 	data, err := json.Marshal(orders)
 	if err != nil {
-		fmt.Println("Marshal ERRRROOOOOR: ---------------------------", err)
+		// fmt.Println("Marshal ERRRROOOOOR: ---------------------------", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

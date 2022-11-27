@@ -59,17 +59,36 @@ func (r *BalancePostgres) UsePoints(guid string, buy app.Buy) error { //add upda
 		tx.Rollback()
 		return err
 	}
-	var g string
-	queryOrder := fmt.Sprintf("SELECT user_guid FROM %s WHERE value = $1", ordersTable)
-	row := r.db.QueryRow(queryOrder, buy.Order) //(queryOrder, guid)
-	if err := row.Scan(&g); err != nil {
-		fmt.Println("error get value guid: ", err)
-	} else {
-		fmt.Println("value guid: ", g)
-	}
+	// var g string
+	// queryOrder := fmt.Sprintf("SELECT user_guid FROM %s WHERE value = $1", ordersTable)
+	// row := r.db.QueryRow(queryOrder, buy.Order) //(queryOrder, guid)
+	// if err := row.Scan(&g); err != nil {
+	// 	fmt.Println("error get value guid: ", err)
+	// } else {
+	// 	fmt.Println("value guid: ", g)
+	// }
 	return nil
 }
 
-func (r *BalancePostgres) GetWithdrawals(guid string) (app.Buy, error) {
-	return app.Buy{}, nil
+func (r *BalancePostgres) GetWithdrawals(guid string) ([]app.Buy, error) {
+	var withdrawn app.Buy
+	var withdrawals []app.Buy
+	queryOrder := fmt.Sprintf("SELECT order_buy, sum, date_buy FROM %s WHERE user_guid = $1 ORDER BY date_buy", buysTable)
+	rows, err := r.db.Query(queryOrder, guid) //(queryOrder, guid)
+	if err != nil {
+		return withdrawals, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		if err := rows.Scan(&withdrawn.Order, &withdrawn.Sum, &withdrawn.Date); err != nil {
+			return withdrawals, err
+		}
+		// fmt.Println("order: ", order)
+		withdrawals = append(withdrawals, withdrawn)
+	}
+	err = rows.Err()
+	if err != nil {
+		return withdrawals, err
+	}
+	return withdrawals, nil
 }
