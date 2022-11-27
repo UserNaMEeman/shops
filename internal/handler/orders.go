@@ -42,7 +42,7 @@ func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
 	// h.services.UploadOrderNumber(string(order))
 }
 
-func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) getOrders(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	guid := fmt.Sprintf("%s", ctx.Value("guid"))
 	newOrder := h.services.Orders
@@ -68,7 +68,7 @@ func (h *Handler) GetOrders(w http.ResponseWriter, r *http.Request) {
 
 	_, err = w.Write(data)
 	if err != nil {
-		fmt.Println("ERRRROOOOOR: ---------------------------", err)
+		// fmt.Println("ERRRROOOOOR: ---------------------------", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

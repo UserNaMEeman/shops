@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 )
 
@@ -27,14 +26,14 @@ func (h *Handler) userIdentity(next http.Handler) http.Handler {
 	})
 }
 
-func (h *Handler) IsLoggedIn(w http.ResponseWriter, r *http.Request) {
+// func (h *Handler) IsLoggedIn(w http.ResponseWriter, r *http.Request) {
 
-	// Obtains cookie from users http.Request
-	cookie, err := r.Cookie("SessionID")
-	if err != nil {
-		fmt.Println(err)
-		// return false/
-	}
-	sessionID := cookie.Value
-	fmt.Println(sessionID)
-}
+// 	// Obtains cookie from users http.Request
+// 	cookie, err := r.Cookie("SessionID")
+// 	if err != nil {
+// 		// fmt.Println(err)
+// 		// return false/
+// 	}
+// 	sessionID := cookie.Value
+// 	// fmt.Println(sessionID)
+// }

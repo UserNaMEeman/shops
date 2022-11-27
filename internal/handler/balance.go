@@ -24,7 +24,7 @@ func (h *Handler) getTotalBalance(guid string) (float64, error) {
 	return totalBalace, nil
 }
 
-func (h *Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) getBalance(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	guid := fmt.Sprintf("%s", ctx.Value("guid"))
 	totalBalace, err := h.getTotalBalance(guid)
@@ -52,7 +52,7 @@ func (h *Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 	w.Write(body)
 }
 
-func (h *Handler) Withdraw(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) withdraw(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("Content-Type") != "application/json" {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
@@ -101,11 +101,11 @@ func (h *Handler) Withdraw(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	fmt.Println("guid: ", guid, "order: ", buy.Order)
+	// fmt.Println("guid: ", guid, "order: ", buy.Order)
 	w.WriteHeader(http.StatusOK)
 }
 
-func (h *Handler) Withdrawals(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) withdrawals(w http.ResponseWriter, r *http.Request) {
 	newBalance := h.services.AccountingUser
 	ctx := r.Context()
 	guid := fmt.Sprintf("%s", ctx.Value("guid"))
@@ -126,7 +126,7 @@ func (h *Handler) Withdrawals(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	fmt.Println("send wths: ", string(data))
+	// fmt.Println("send wths: ", string(data))
 	w.Header().Add("Content-Type", "application/json")
 
 	_, err = w.Write(data)
