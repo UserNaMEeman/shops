@@ -63,7 +63,9 @@ func (r *BalancePostgres) UsePoints(guid string, buy app.Buy) error { //add upda
 	queryOrder := fmt.Sprintf("SELECT user_guid FROM %s WHERE value = $1", ordersTable)
 	row := r.db.QueryRow(queryOrder, buy.Order) //(queryOrder, guid)
 	if err := row.Scan(&g); err != nil {
-		fmt.Println("error get value guid: ", g)
+		fmt.Println("error get value guid: ", err)
+	} else {
+		fmt.Println("value guid: ", g)
 	}
 	return nil
 }
