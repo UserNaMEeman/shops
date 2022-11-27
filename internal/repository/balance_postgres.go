@@ -28,22 +28,34 @@ func (r *BalancePostgres) GetBalance(guid string, totalAccrual float64) (app.Bal
 	balnce.Withdrawn = withdrawn
 	fmt.Println("postgre balance: ", balnce)
 	return balnce, nil
-	// a := app.Balance{totalAccrual, 0}
-	// return a, nil
 }
 
-func (r *BalancePostgres) UsePoints(guid string, buy app.Buy) error {
-	now := time.Now()
-	timeNow := now.Format(time.RFC3339)
-	query := fmt.Sprintf("INSERT INTO %s (order_buy, sum, date_buy) values ($1, $2, $3)", buysTable)
-	_, err := r.db.Exec(query, buy.Order, buy.Sum, timeNow) //.QueryRow(query, userGUID, orderNumber)
+func (r *BalancePostgres) UsePoints(guid string, buy app.Buy) error { //add update orders table
+	timeNow := buy.Date.Format(time.RFC3339)
+	tx, err := r.db.Begin()
 	if err != nil {
+		return err
+	}
+
+	query := fmt.Sprintf("INSERT INTO %s (order_buy, sum, date_buy) values ($1, $2, $3)", buysTable)
+	_, err = tx.Exec(query, buy.Order, buy.Sum, timeNow) //.QueryRow(query, userGUID, orderNumber)
+	if err != nil {
+		tx.Rollback()
 		return err
 	}
 	query = fmt.Sprintf("UPDATE %s SET withdrawn = withdrawn + $1 WHERE user_guid = $2", balanceTable)
-	_, err = r.db.Exec(query, buy.Sum, guid)
+	_, err = tx.Exec(query, buy.Sum, guid)
 	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	if err = tx.Commit(); err != nil {
+		tx.Rollback()
 		return err
 	}
 	return nil
+}
+
+func (r *BalancePostgres) GetWithdrawals(guid string) (app.Buy, error) {
+	return app.Buy{}, nil
 }

@@ -27,6 +27,7 @@ type Balance struct {
 }
 
 type Buy struct {
-	Order string  `json:"order"`
-	Sum   float64 `json:"sum"`
+	Order string    `json:"order"`
+	Sum   float64   `json:"sum"`
+	Date  time.Time `json:"processed_at"`
 }
