@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/UserNaMEeman/shops/app"
 )
 
 func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +44,7 @@ func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) getOrders(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	guid := fmt.Sprintf("%s", ctx.Value("guid"))
+	guid := fmt.Sprintf("%s", ctx.Value(app.TypeGUID))
 	newOrder := h.services.Orders
 	orders, err := newOrder.GetOrders(guid)
 	if err != nil {
