@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/UserNaMEeman/shops/app"
 	"github.com/UserNaMEeman/shops/internal/repository"
@@ -103,7 +104,9 @@ func getOrder(url string) (app.Accruals, error) {
 	defer resp.Body.Close()
 	if resp.StatusCode == 204 {
 		fmt.Println("status code for ", url, ": ", resp.StatusCode)
-		return app.Accruals{}, nil
+		numb := strings.Split(url, "/")[3]
+		fmt.Println("numb: ", numb)
+		return app.Accruals{Order: numb, Status: "INVALID"}, nil
 	}
 	if err != nil {
 		return app.Accruals{}, err
