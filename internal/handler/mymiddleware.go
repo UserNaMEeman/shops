@@ -3,8 +3,6 @@ package handler
 import (
 	"context"
 	"net/http"
-
-	"github.com/UserNaMEeman/shops/app"
 )
 
 func (h *Handler) userIdentity(next http.Handler) http.Handler {
@@ -21,7 +19,7 @@ func (h *Handler) userIdentity(next http.Handler) http.Handler {
 			return
 		}
 		ctx := r.Context()
-		ctx = context.WithValue(ctx, app.TypeGUID, userGUID)
+		ctx = context.WithValue(ctx, "guid", userGUID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
