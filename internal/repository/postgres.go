@@ -86,6 +86,7 @@ func CreateTables(db *sqlx.DB) []error {
 	query = fmt.Sprintf(`CREATE TABLE %s
 	(
 		id serial not null unique,
+		user_guid varchar(255) not null,
 		order_buy varchar(255) not null,
 		sum numeric default 0,
 		date_buy timestamp not null

@@ -37,8 +37,8 @@ func (r *BalancePostgres) UsePoints(guid string, buy app.Buy) error { //add upda
 		return err
 	}
 
-	query := fmt.Sprintf("INSERT INTO %s (order_buy, sum, date_buy) values ($1, $2, $3)", buysTable)
-	_, err = tx.Exec(query, buy.Order, buy.Sum, timeNow) //.QueryRow(query, userGUID, orderNumber)
+	query := fmt.Sprintf("INSERT INTO %s (user_guid, order_buy, sum, date_buy) values ($1, $2, $3)", buysTable)
+	_, err = tx.Exec(query, guid, buy.Order, buy.Sum, timeNow) //.QueryRow(query, userGUID, orderNumber)
 	if err != nil {
 		tx.Rollback()
 		return err
