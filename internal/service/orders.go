@@ -3,6 +3,7 @@ package service
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -49,7 +50,9 @@ func (order *Order) CheckValidOrder(orderNumber string) (bool, error) {
 
 func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
 	orders, err := order.repo.GetOrders(guid)
+	fmt.Println("orders for ", guid, ": ", orders)
 	if err != nil {
+		fmt.Println("get orders err for ", guid)
 		return []app.UserOrders{}, err
 	}
 	// return orders, nil

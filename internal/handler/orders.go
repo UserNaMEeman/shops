@@ -38,8 +38,6 @@ func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusConflict)
 		return
 	}
-
-	// h.services.UploadOrderNumber(string(order))
 }
 
 func (h *Handler) getOrders(w http.ResponseWriter, r *http.Request) {
@@ -48,8 +46,6 @@ func (h *Handler) getOrders(w http.ResponseWriter, r *http.Request) {
 	newOrder := h.services.Orders
 	orders, err := newOrder.GetOrders(guid)
 	if err != nil {
-		// fmt.Println(err)
-		// fmt.Println("GetOrders ERRRROOOOOR: ---------------------------", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -60,7 +56,6 @@ func (h *Handler) getOrders(w http.ResponseWriter, r *http.Request) {
 	}
 	data, err := json.Marshal(orders)
 	if err != nil {
-		// fmt.Println("Marshal ERRRROOOOOR: ---------------------------", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -69,7 +64,6 @@ func (h *Handler) getOrders(w http.ResponseWriter, r *http.Request) {
 
 	_, err = w.Write(data)
 	if err != nil {
-		// fmt.Println("ERRRROOOOOR: ---------------------------", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
