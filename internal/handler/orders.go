@@ -54,6 +54,7 @@ func (h *Handler) getOrders(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if len(orders) == 0 {
+		fmt.Println("guid for no content: ", guid)
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
