@@ -26,7 +26,7 @@ func (h *Handler) getTotalBalance(guid string) (float64, error) {
 
 func (h *Handler) getBalance(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	guid := fmt.Sprintf("%s", ctx.Value("guid"))
+	guid := fmt.Sprintf("%s", ctx.Value(app.TypeGUID))
 	totalBalace, err := h.getTotalBalance(guid)
 	if err != nil {
 		// fmt.Println("GetOrders err: ", err)
@@ -57,7 +57,7 @@ func (h *Handler) withdraw(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 	ctx := r.Context()
-	guid := fmt.Sprintf("%s", ctx.Value("guid"))
+	guid := fmt.Sprintf("%s", ctx.Value(app.TypeGUID))
 	totalBalace, err := h.getTotalBalance(guid)
 	if err != nil {
 		// fmt.Println("GetOrders err: ", err)
@@ -108,7 +108,7 @@ func (h *Handler) withdraw(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) withdrawals(w http.ResponseWriter, r *http.Request) {
 	newBalance := h.services.AccountingUser
 	ctx := r.Context()
-	guid := fmt.Sprintf("%s", ctx.Value("guid"))
+	guid := fmt.Sprintf("%s", ctx.Value(app.TypeGUID))
 
 	buys, err := newBalance.GetWithdrawals(guid)
 	if err != nil {
