@@ -26,14 +26,24 @@ func (r *AuthPostgres) CreateUser(ctx context.Context, user app.User) (string, e
 		// newErr := NewUserError(err)
 		return "", nil
 	}
+	tx, err := r.db.Begin()
+	if err != nil {
+		return "", err
+	}
 	query := fmt.Sprintf("INSERT INTO %s (login, user_guid, password_hash) values ($1, $2, $3) RETURNING user_guid", usersTable)
-	row := r.db.QueryRowContext(ctx, query, user.Login, user.Login, user.Password)
+	row := tx.QueryRowContext(ctx, query, user.Login, user.Login, user.Password)
 	if err := row.Scan(&userGUID); err != nil {
+		tx.Rollback()
 		return "", err
 	}
 	query = fmt.Sprintf("INSERT INTO %s (user_guid, current, withdrawn) values ($1, $2, $3)", balanceTable)
-	_, err := r.db.ExecContext(ctx, query, user.Login, 0, 0)
+	_, err = tx.ExecContext(ctx, query, user.Login, 0, 0)
 	if err != nil {
+		tx.Rollback()
+		return "", err
+	}
+	if err = tx.Commit(); err != nil {
+		tx.Rollback()
 		return "", err
 	}
 	return userGUID, nil
