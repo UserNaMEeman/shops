@@ -46,19 +46,3 @@ func (r *AuthPostgres) GetUser(user app.User) (string, error) {
 	}
 	return userGUID, nil
 }
-
-// type usererr struct {
-// 	message string
-// 	err     error
-// }
-
-// func (mes *usererr) Error() string {
-// 	return fmt.Sprintf("%s %v", mes.message, mes.err)
-// }
-
-// func NewUserError(err error) error {
-// 	return &usererr{
-// 		message: "user:",
-// 		err:     errors.New("already exist"),
-// 	}
-// }
