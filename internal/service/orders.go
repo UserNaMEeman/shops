@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -22,7 +23,7 @@ func NewOrdersService(repo repository.Orders, asURL string) *Order {
 	return &Order{repo: repo, asURL: asURL}
 }
 
-func (order *Order) UploadOrderNumber(guid, orderNumber string) error {
+func (order *Order) UploadOrderNumber(ctx context.Context, guid, orderNumber string) error {
 	num, err := strconv.Atoi(orderNumber)
 	if err != nil {
 		return err
@@ -30,11 +31,11 @@ func (order *Order) UploadOrderNumber(guid, orderNumber string) error {
 	if !valid(num) {
 		return errors.New("number is not valid")
 	}
-	return order.repo.UploadOrderNumber(guid, orderNumber)
+	return order.repo.UploadOrderNumber(ctx, guid, orderNumber)
 }
 
-func (order *Order) CheckOrder(guid, orderNumber string) (string, bool) {
-	return order.repo.CheckOrder(guid, orderNumber)
+func (order *Order) CheckOrder(ctx context.Context, guid, orderNumber string) (string, bool) {
+	return order.repo.CheckOrder(ctx, guid, orderNumber)
 }
 
 func (order *Order) CheckValidOrder(orderNumber string) (bool, error) {
@@ -49,8 +50,8 @@ func (order *Order) CheckValidOrder(orderNumber string) (bool, error) {
 	}
 }
 
-func (order *Order) GetOrders(guid string) ([]app.UserOrders, error) {
-	orders, err := order.repo.GetOrders(guid)
+func (order *Order) GetOrders(ctx context.Context, guid string) ([]app.UserOrders, error) {
+	orders, err := order.repo.GetOrders(ctx, guid)
 	fmt.Println("orders for ", guid, ": ", orders)
 	if err != nil {
 		fmt.Println("get orders err for ", guid)
@@ -103,7 +104,6 @@ func getOrder(url string) (app.Accruals, error) {
 	if resp.StatusCode == 204 {
 		fmt.Println("status code for ", url, ": ", resp.StatusCode)
 		numb := strings.Split(url, "/api/orders/")[1]
-		fmt.Println("numb: ", numb)
 		return app.Accruals{Order: numb, Status: "NEW"}, nil
 	}
 	if err != nil {

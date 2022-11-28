@@ -1,16 +1,20 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/UserNaMEeman/shops/app"
 )
 
 func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 	var newUser app.User
+	ctx, cancel := context.WithTimeout(r.Context(), 20*time.Second)
+	defer cancel()
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -23,7 +27,7 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("login and password must be not empty"))
 		return
 	}
-	GUID, err := h.services.Authorization.CreateUser(newUser)
+	GUID, err := h.services.Authorization.CreateUser(ctx, newUser)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -33,7 +37,7 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("login already exist"))
 		return
 	}
-	token, err := h.services.Authorization.GenerateToken(newUser)
+	token, err := h.services.Authorization.GenerateToken(ctx, newUser)
 	if err != nil {
 		fmt.Println("gen token err: ", err)
 		w.WriteHeader(401)
@@ -44,6 +48,8 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 }
 func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) { // must add 401 — неверная пара логин/пароль;
 	var user app.User
+	ctx, cancel := context.WithTimeout(r.Context(), 20*time.Second)
+	defer cancel()
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -56,7 +62,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) { // must add 4
 		w.Write([]byte("login and password must be not empty"))
 		return
 	}
-	token, err := h.services.Authorization.GenerateToken(user)
+	token, err := h.services.Authorization.GenerateToken(ctx, user)
 	if err != nil {
 		fmt.Println("gen token err: ", err)
 		w.WriteHeader(http.StatusUnauthorized)

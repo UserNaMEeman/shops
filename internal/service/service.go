@@ -1,20 +1,22 @@
 package service
 
 import (
+	"context"
+
 	"github.com/UserNaMEeman/shops/app"
 	"github.com/UserNaMEeman/shops/internal/repository"
 )
 
 type Authorization interface {
-	CreateUser(user app.User) (string, error)
-	GenerateToken(user app.User) (string, error)
+	CreateUser(ctx context.Context, user app.User) (string, error)
+	GenerateToken(ctx context.Context, user app.User) (string, error)
 	ParseToken(token string) (string, error)
 }
 
 type Orders interface {
-	UploadOrderNumber(guid, number string) error
-	CheckOrder(guid, orderNumber string) (string, bool)
-	GetOrders(guid string) ([]app.UserOrders, error)
+	UploadOrderNumber(ctx context.Context, guid, number string) error
+	CheckOrder(ctx context.Context, guid, orderNumber string) (string, bool)
+	GetOrders(ctx context.Context, guid string) ([]app.UserOrders, error)
 	CheckValidOrder(orderNumber string) (bool, error)
 } //приём номеров заказов от зарегистрированных пользователей;
 
@@ -22,9 +24,9 @@ type Orders interface {
 // } //учёт и ведение списка переданных номеров заказов зарегистрированного пользователя;
 
 type AccountingUser interface {
-	GetBalance(guid string, totalAccrual float64) (app.Balance, error)
-	UsePoints(guid string, buy app.Buy) error
-	GetWithdrawals(guid string) ([]app.Buy, error)
+	GetBalance(ctx context.Context, guid string, totalAccrual float64) (app.Balance, error)
+	UsePoints(ctx context.Context, guid string, buy app.Buy) error
+	GetWithdrawals(ctx context.Context, guid string) ([]app.Buy, error)
 } //учёт и ведение накопительного счёта зарегистрированного пользователя;
 
 type WithdrawPoints interface {
