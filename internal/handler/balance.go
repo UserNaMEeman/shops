@@ -1,18 +1,20 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/UserNaMEeman/shops/app"
 )
 
-func (h *Handler) getTotalBalance(guid string) (float64, error) {
+func (h *Handler) getTotalBalance(ctx context.Context, guid string) (float64, error) {
 	var totalBalace float64
 	newOrder := h.services.Orders
-	orders, err := newOrder.GetOrders(guid)
+	orders, err := newOrder.GetOrders(ctx, guid)
 	if err != nil {
 		// fmt.Println("GetOrders err: ", err)
 		return 0, err
@@ -25,9 +27,11 @@ func (h *Handler) getTotalBalance(guid string) (float64, error) {
 }
 
 func (h *Handler) getBalance(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
+	// ctx := r.Context()
+	ctx, cancel := context.WithTimeout(r.Context(), 20*time.Second)
+	defer cancel()
 	guid := fmt.Sprintf("%s", ctx.Value(app.TypeGUID))
-	totalBalace, err := h.getTotalBalance(guid)
+	totalBalace, err := h.getTotalBalance(ctx, guid)
 	if err != nil {
 		// fmt.Println("GetOrders err: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -36,7 +40,7 @@ func (h *Handler) getBalance(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println("totalBalance: ", totalBalace)
 	newBalance := h.services.AccountingUser
 	// fmt.Println("newBalance: ", newBalance)
-	balance, err := newBalance.GetBalance(guid, totalBalace)
+	balance, err := newBalance.GetBalance(ctx, guid, totalBalace)
 	if err != nil {
 		// fmt.Println("balance err: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -56,9 +60,11 @@ func (h *Handler) withdraw(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("Content-Type") != "application/json" {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
-	ctx := r.Context()
+	// ctx := r.Context()
+	ctx, cancel := context.WithTimeout(r.Context(), 20*time.Second)
+	defer cancel()
 	guid := fmt.Sprintf("%s", ctx.Value(app.TypeGUID))
-	totalBalace, err := h.getTotalBalance(guid)
+	totalBalace, err := h.getTotalBalance(ctx, guid)
 	if err != nil {
 		// fmt.Println("GetOrders err: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -66,7 +72,7 @@ func (h *Handler) withdraw(w http.ResponseWriter, r *http.Request) {
 	}
 	newBalance := h.services.AccountingUser
 	newOrder := h.services.Orders
-	balance, err := newBalance.GetBalance(guid, totalBalace)
+	balance, err := newBalance.GetBalance(ctx, guid, totalBalace)
 	if err != nil {
 		// fmt.Println("balance err: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
@@ -96,7 +102,7 @@ func (h *Handler) withdraw(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		return
 	}
-	if err = newBalance.UsePoints(guid, buy); err != nil {
+	if err = newBalance.UsePoints(ctx, guid, buy); err != nil {
 		// fmt.Println("Use Points: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -107,10 +113,12 @@ func (h *Handler) withdraw(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) withdrawals(w http.ResponseWriter, r *http.Request) {
 	newBalance := h.services.AccountingUser
-	ctx := r.Context()
+	// ctx := r.Context()
+	ctx, cancel := context.WithTimeout(r.Context(), 20*time.Second)
+	defer cancel()
 	guid := fmt.Sprintf("%s", ctx.Value(app.TypeGUID))
 
-	buys, err := newBalance.GetWithdrawals(guid)
+	buys, err := newBalance.GetWithdrawals(ctx, guid)
 	if err != nil {
 		if len(buys) == 0 {
 			// fmt.Println("valid err: ", err)
@@ -134,6 +142,4 @@ func (h *Handler) withdrawals(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
-	// wth, err := h.services.WithdrawPoints
 }

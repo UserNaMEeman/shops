@@ -52,7 +52,7 @@ func (r *AuthPostgres) CreateUser(ctx context.Context, user app.User) (string, e
 func (r *AuthPostgres) GetUser(ctx context.Context, user app.User) (string, error) {
 	var userGUID string
 	query := fmt.Sprintf("SELECT user_guid  FROM %s WHERE login = $1 AND password_hash = $2", usersTable)
-	err := r.db.Get(&userGUID, query, user.Login, user.Password)
+	err := r.db.GetContext(ctx, &userGUID, query, user.Login, user.Password)
 	if err != nil {
 		return "", err
 	}

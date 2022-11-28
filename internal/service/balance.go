@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"time"
 
 	"github.com/UserNaMEeman/shops/app"
@@ -15,16 +16,16 @@ func NewBalanceService(repo repository.AccountingUser) *Balance {
 	return &Balance{repo: repo}
 }
 
-func (b *Balance) GetBalance(guid string, totalAccrual float64) (app.Balance, error) {
-	return b.repo.GetBalance(guid, totalAccrual)
+func (b *Balance) GetBalance(ctx context.Context, guid string, totalAccrual float64) (app.Balance, error) {
+	return b.repo.GetBalance(ctx, guid, totalAccrual)
 }
 
-func (b *Balance) UsePoints(guid string, buy app.Buy) error {
+func (b *Balance) UsePoints(ctx context.Context, guid string, buy app.Buy) error {
 	buy.Date = time.Now()
-	return b.repo.UsePoints(guid, buy)
+	return b.repo.UsePoints(ctx, guid, buy)
 }
 
-func (b *Balance) GetWithdrawals(guid string) ([]app.Buy, error) {
+func (b *Balance) GetWithdrawals(ctx context.Context, guid string) ([]app.Buy, error) {
 
-	return b.repo.GetWithdrawals(guid)
+	return b.repo.GetWithdrawals(ctx, guid)
 }

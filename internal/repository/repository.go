@@ -13,17 +13,17 @@ type Authorization interface { //регистрация, аутентифика�
 }
 
 type Orders interface {
-	UploadOrderNumber(guid, orderNumber string) error
-	CheckOrder(guid, orderNumber string) (string, bool)
-	GetOrders(guid string) ([]app.UserOrders, error)
+	UploadOrderNumber(ctx context.Context, guid, orderNumber string) error
+	CheckOrder(ctx context.Context, guid, orderNumber string) (string, bool)
+	GetOrders(ctx context.Context, guid string) ([]app.UserOrders, error)
 } //приём номеров заказов от зарегистрированных пользователей;
 
 type AccountingOrders interface{} //учёт и ведение списка переданных номеров заказов зарегистрированного пользователя;
 
 type AccountingUser interface {
-	GetBalance(guid string, totalAccrual float64) (app.Balance, error)
-	UsePoints(guid string, buy app.Buy) error
-	GetWithdrawals(guid string) ([]app.Buy, error)
+	GetBalance(ctx context.Context, guid string, totalAccrual float64) (app.Balance, error)
+	UsePoints(ctx context.Context, guid string, buy app.Buy) error
+	GetWithdrawals(ctx context.Context, guid string) ([]app.Buy, error)
 } //учёт и ведение накопительного счёта зарегистрированного пользователя;
 
 type LoyaltyPoints interface{} //проверка принятых номеров заказов через систему расчёта баллов лояльности;
