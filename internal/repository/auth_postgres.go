@@ -42,8 +42,12 @@ func (r *AuthPostgres) CreateUser(ctx context.Context, user app.User) (string, e
 		tx.Rollback()
 		return "", err
 	}
-	query := fmt.Sprintf("INSERT INTO %s (user_guid, current, withdrawn) values ($1, $2, $3)", balanceTable)
-	_, err = tx.ExecContext(ctx, query, user.Login, 0, 0)
+	_, err = tx.ExecContext(ctx, "INSERT INTO @balanceTable (user_guid, current, withdrawn) values (@giud, @val, @val)",
+		sql.Named("giud", user.Login),
+		sql.Named("val", 0),
+		sql.Named("val", 0),
+	)
+	// _, err = tx.ExecContext(ctx, query, user.Login, 0, 0)
 	if err != nil {
 		tx.Rollback()
 		return "", err
