@@ -47,7 +47,7 @@ func (r *AuthPostgres) CreateUser(ctx context.Context, user app.User) (string, e
 		sql.Named("val", 0),
 		sql.Named("val", 0),
 	)
-	// _, err = tx.ExecContext(ctx, query, user.Login, 0, 0)
+	// _, err = tx.ExecContext(ctx, query, user.Login, 0, 0) ///
 	if err != nil {
 		tx.Rollback()
 		return "", err
