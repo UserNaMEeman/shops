@@ -47,7 +47,6 @@ func (h *Handler) uploadOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) getOrders(w http.ResponseWriter, r *http.Request) {
-	// ctx := r.Context()
 	ctx, cancel := context.WithTimeout(r.Context(), 20*time.Second)
 	defer cancel()
 	guid := fmt.Sprintf("%s", ctx.Value(app.TypeGUID))
@@ -58,7 +57,6 @@ func (h *Handler) getOrders(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if len(orders) == 0 {
-		// fmt.Println("guid for no content: ", guid)
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
@@ -67,9 +65,7 @@ func (h *Handler) getOrders(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	fmt.Println("send to user: ", string(data))
 	w.Header().Add("Content-Type", "application/json")
-
 	_, err = w.Write(data)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
