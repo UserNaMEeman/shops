@@ -1,13 +1,15 @@
 package service
 
 import (
+	"context"
+
 	"github.com/UserNaMEeman/shops/app"
 	"github.com/UserNaMEeman/shops/internal/repository"
 )
 
 type Authorization interface {
-	CreateUser(user app.User) (string, error)
-	GenerateToken(user app.User) (string, error)
+	CreateUser(ctx context.Context, user app.User) (string, error)
+	GenerateToken(ctx context.Context, user app.User) (string, error)
 	ParseToken(token string) (string, error)
 }
 

@@ -1,13 +1,15 @@
 package repository
 
 import (
+	"context"
+
 	"github.com/UserNaMEeman/shops/app"
 	"github.com/jmoiron/sqlx"
 )
 
 type Authorization interface { //регистрация, аутентификация и авторизация пользователей;
-	CreateUser(app.User) (string, error)
-	GetUser(app.User) (string, error)
+	CreateUser(context.Context, app.User) (string, error)
+	GetUser(context.Context, app.User) (string, error)
 }
 
 type Orders interface {

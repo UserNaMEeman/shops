@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"crypto/sha1"
 	"errors"
 	"fmt"
@@ -29,15 +30,15 @@ func NewAuthService(repo repository.Authorization) *AuthService {
 	return &AuthService{repo: repo}
 }
 
-func (s *AuthService) CreateUser(user app.User) (string, error) {
+func (s *AuthService) CreateUser(ctx context.Context, user app.User) (string, error) {
 	user.Password = generatePasswordHash(user.Password)
-	return s.repo.CreateUser(user)
+	return s.repo.CreateUser(ctx, user)
 }
 
-func (s *AuthService) GenerateToken(user app.User) (string, error) {
+func (s *AuthService) GenerateToken(ctx context.Context, user app.User) (string, error) {
 	// fmt.Println("do")
 	user.Password = generatePasswordHash(user.Password)
-	guid, err := s.repo.GetUser(user)
+	guid, err := s.repo.GetUser(ctx, user)
 	if err != nil {
 		return "", err
 	}
