@@ -2,7 +2,6 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 
 	"github.com/UserNaMEeman/shops/app"
@@ -31,25 +30,14 @@ func (r *AuthPostgres) CreateUser(ctx context.Context, user app.User) (string, e
 	if err != nil {
 		return "", err
 	}
-	// query := fmt.Sprintf("INSERT INTO %s (login, user_guid, password_hash) values ($1, $2, $3) RETURNING user_guid", usersTable)
-	row := tx.QueryRowContext(ctx, "INSERT INTO @usersTable (login, user_guid, password_hash) values (@login, @guid, @password_hash) RETURNING user_guid",
-		sql.Named("usersTable", usersTable),
-		sql.Named("login", user.Login),
-		sql.Named("guid", user.Login),
-		sql.Named("password_hash", user.Password),
-	)
-	// row := tx.QueryRowContext(ctx, query, user.Login, user.Login, user.Password)
+	query := fmt.Sprintf("INSERT INTO %s (login, user_guid, password_hash) values ($1, $2, $3) RETURNING user_guid", usersTable)
+	row := tx.QueryRowContext(ctx, query, user.Login, user.Login, user.Password)
 	if err := row.Scan(&userGUID); err != nil {
 		tx.Rollback()
 		return "", err
 	}
-	_, err = tx.ExecContext(ctx, "INSERT INTO @balanceTable (user_guid, current, withdrawn) values (@giud, @val, @val)",
-		sql.Named("balanceTable", balanceTable),
-		sql.Named("giud", user.Login),
-		sql.Named("val", 0),
-		sql.Named("val", 0),
-	)
-	// _, err = tx.ExecContext(ctx, query, user.Login, 0, 0) ///
+	query = fmt.Sprintf("INSERT INTO %s (user_guid, current, withdrawn) values ($1, $2, $3)", balanceTable)
+	_, err = tx.ExecContext(ctx, query, user.Login, 0, 0)
 	if err != nil {
 		tx.Rollback()
 		return "", err
