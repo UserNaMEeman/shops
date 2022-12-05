@@ -17,19 +17,21 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Println(err)
 		return
 	}
 	defer r.Body.Close()
 	json.Unmarshal(data, &newUser)
 	if newUser.Login == "" || newUser.Password == "" {
-		w.WriteHeader(400)
+		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("login and password must be not empty"))
 		return
 	}
 	GUID, err := h.services.Authorization.CreateUser(ctx, newUser)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Println(err)
 		return
 	}
 	if GUID == "" {
